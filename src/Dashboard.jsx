@@ -29,11 +29,11 @@ function StockNeeded() {
   return (
     <div className={styles.stockNeededContainer}>
       <h2>Stock needed</h2>
-      <ul className={styles.stockNeededList}>
-        <li className={styles.stockNeededItem}>5x Asus Laptops</li>
-        <li className={styles.stockNeededItem}>2x Monitors</li>
-        <li className={styles.stockNeededItem}>3x Lenovo laptop</li>
-        <li className={styles.stockNeededItem}>10x keyboard</li>
+      <ul className={styles.list}>
+        <li className={styles.listItem}>5x Asus Laptops</li>
+        <li className={styles.listItem}>2x Monitors</li>
+        <li className={styles.listItem}>3x Lenovo laptop</li>
+        <li className={styles.listItem}>10x keyboard</li>
       </ul>
       <button>Place orders</button>
     </div>
@@ -42,12 +42,13 @@ function StockNeeded() {
 
 function CustomerOrders() {
   return (
-    <div>
+    <div className={styles.customerOrderContainer}>
       <h2>Recent Customer Orders</h2>
-      <ul>
-        <li>2x Keyboards</li>
-        <li>1x Monitor</li>
-        <li>3x Asus Laptops</li>
+      <ul className={styles.list}>
+        <li className={styles.listItem}>2x Keyboards</li>
+        <li className={styles.listItem}>1x Monitor</li>
+        <li className={styles.listItem}>3x Asus Laptops</li>
+        <li className={styles.listItem}>3x Asus Laptops</li>
       </ul>
     </div>
   );

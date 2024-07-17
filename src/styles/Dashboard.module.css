@@ -32,11 +32,19 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 70%;
-    height: 20vh;
+    width: 80%;
+    height: 25vh;
 }
 
-.stockNeededList {
+.customerOrderContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    height: 15vh;
+}
+
+.list {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -47,7 +55,7 @@
     margin-bottom: 10px;
 }
 
-.stockNeededItem {
+.listItem {
     padding: 3px;
     width: 50%;
     box-sizing: border-box;
