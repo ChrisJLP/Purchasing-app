@@ -1,3 +1,5 @@
+import styles from "./styles/Dashboard.module.css";
+
 function Dashboard() {
   return (
     <div>
@@ -12,12 +14,12 @@ function Dashboard() {
 
 function Navigation() {
   return (
-    <nav>
-      <ul>
-        <li>Dashboard</li>
-        <li>Orders</li>
-        <li>Inventory</li>
-        <li>Suppliers</li>
+    <nav className={styles.nav}>
+      <ul className={styles.navList}>
+        <li className={styles.navItem}>Dashboard</li>
+        <li className={styles.navItem}>Orders</li>
+        <li className={styles.navItem}>Inventory</li>
+        <li className={styles.navItem}>Suppliers</li>
       </ul>
     </nav>
   );
