@@ -21,3 +21,35 @@
     background-color: #e9ecef;
 }
 
+.dashboardContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stockNeededContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 70%;
+    height: 20vh;
+}
+
+.stockNeededList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 10px;
+}
+
+.stockNeededItem {
+    padding: 3px;
+    width: 50%;
+    box-sizing: border-box;
+    text-align: center;
+}

@@ -2,7 +2,7 @@ import styles from "./styles/Dashboard.module.css";
 
 function Dashboard() {
   return (
-    <div>
+    <div className={styles.dashboardContainer}>
       <Navigation />
       <StockNeeded />
       <CustomerOrders />
@@ -27,13 +27,13 @@ function Navigation() {
 
 function StockNeeded() {
   return (
-    <div>
+    <div className={styles.stockNeededContainer}>
       <h2>Stock needed</h2>
-      <ul>
-        <li>5x Asus Laptops</li>
-        <li>2x Monitors</li>
-        <li>3x Lenovo laptop</li>
-        <li>10x keyboard</li>
+      <ul className={styles.stockNeededList}>
+        <li className={styles.stockNeededItem}>5x Asus Laptops</li>
+        <li className={styles.stockNeededItem}>2x Monitors</li>
+        <li className={styles.stockNeededItem}>3x Lenovo laptop</li>
+        <li className={styles.stockNeededItem}>10x keyboard</li>
       </ul>
       <button>Place orders</button>
     </div>
