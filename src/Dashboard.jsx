@@ -56,7 +56,7 @@ function CustomerOrders() {
 
 function SupplierOrders() {
   return (
-    <div>
+    <div className={styles.supplierOrderContainer}>
       <h2>Recent Supplier Orders</h2>
       <ul>
         <li>2x Monitors - due 05/08</li>
@@ -68,7 +68,7 @@ function SupplierOrders() {
 
 function QuickLinks() {
   return (
-    <div>
+    <div className={styles.quickLinksContainer}>
       <h2>Quick Links</h2>
       <ul>
         <li>Create Order</li>

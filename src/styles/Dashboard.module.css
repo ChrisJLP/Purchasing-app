@@ -61,3 +61,17 @@
     box-sizing: border-box;
     text-align: center;
 }
+
+.supplierOrderContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 13vh;
+}
+
+.quickLinksContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 20vh;
+}
