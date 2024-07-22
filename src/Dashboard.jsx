@@ -16,7 +16,7 @@ function Navigation() {
   return (
     <nav className={styles.nav}>
       <ul className={styles.navList}>
-        <li className={styles.navItem}>Dashboard</li>
+        <li className={styles.activeNavItem}>Dashboard</li>
         <li className={styles.navItem}>Orders</li>
         <li className={styles.navItem}>Inventory</li>
         <li className={styles.navItem}>Suppliers</li>
@@ -35,7 +35,7 @@ function StockNeeded() {
         <li className={styles.listItem}>3x Lenovo laptop</li>
         <li className={styles.listItem}>10x keyboard</li>
       </ul>
-      <button>Place orders</button>
+      <button className={styles.button}>Go to orders</button>
     </div>
   );
 }
@@ -59,8 +59,8 @@ function SupplierOrders() {
     <div className={styles.supplierOrderContainer}>
       <h2>Recent Supplier Orders</h2>
       <ul>
-        <li>2x Monitors - due 05/08</li>
-        <li>3x Docks - due 22/07</li>
+        <li className={styles.item}>2x Monitors - due 05/08</li>
+        <li className={styles.item}>3x Docks - due 22/07</li>
       </ul>
     </div>
   );
@@ -71,11 +71,11 @@ function QuickLinks() {
     <div className={styles.quickLinksContainer}>
       <h2>Quick Links</h2>
       <ul>
-        <li>Create Order</li>
-        <li>Search Item</li>
-        <li>Search Supplier</li>
-        <li>Create Item</li>
-        <li>Create Supplier</li>
+        <li className={styles.item}>Create Order</li>
+        <li className={styles.item}>Search Item</li>
+        <li className={styles.item}>Search Supplier</li>
+        <li className={styles.item}>Create Item</li>
+        <li className={styles.item}>Create Supplier</li>
       </ul>
     </div>
   );

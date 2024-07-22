@@ -15,16 +15,34 @@
 .navItem {
     cursor: pointer;
     padding: 5px 10px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .navItem:hover {
     background-color: #e9ecef;
+    color: #333;
+    text-decoration: none;
+}
+
+.activeNavItem {
+    cursor: pointer;
+    padding: 5px 10px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-weight: bold;
 }
 
 .dashboardContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: #f0f2f5;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
 }
 
 .stockNeededContainer {
@@ -33,15 +51,27 @@
     align-items: center;
     justify-content: center;
     width: 80%;
-    height: 25vh;
+    height: 20vh;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #e3f2fd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 5%;
+    margin-top: 10%;
 }
 
 .customerOrderContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     width: 80%;
     height: 15vh;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #e3f2fd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 5%;
 }
 
 .list {
@@ -62,16 +92,51 @@
     text-align: center;
 }
 
+.item {
+    list-style-type: none;
+}
+
 .supplierOrderContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     height: 13vh;
+    width: 80%;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #e3f2fd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 5%;
 }
 
 .quickLinksContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     height: 20vh;
+    width: 80%;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #e3f2fd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 5%;
+    
+}
+
+.button {
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.button:hover {
+    background-color: #004494;
 }
