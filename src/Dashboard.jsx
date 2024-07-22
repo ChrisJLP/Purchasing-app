@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styles from "./styles/Dashboard.module.css";
 
 function Dashboard() {
@@ -17,7 +18,9 @@ function Navigation() {
     <nav className={styles.nav}>
       <ul className={styles.navList}>
         <li className={styles.activeNavItem}>Dashboard</li>
-        <li className={styles.navItem}>Orders</li>
+        <li className={styles.navItem}>
+          <Link to="/orders">Orders</Link>
+        </li>
         <li className={styles.navItem}>Inventory</li>
         <li className={styles.navItem}>Suppliers</li>
       </ul>
