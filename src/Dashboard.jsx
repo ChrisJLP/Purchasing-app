@@ -61,12 +61,12 @@ function QuickLinks() {
   return (
     <div className={styles.quickLinksContainer}>
       <h2>Quick Links</h2>
-      <ul>
-        <li className={styles.item}>Create Order</li>
-        <li className={styles.item}>Search Item</li>
-        <li className={styles.item}>Search Supplier</li>
-        <li className={styles.item}>Create Item</li>
-        <li className={styles.item}>Create Supplier</li>
+      <ul className={styles.quickLinksList}>
+        <li className={styles.quickLink}>Create Order</li>
+        <li className={styles.quickLink}>Search Item</li>
+        <li className={styles.quickLink}>Search Supplier</li>
+        <li className={styles.quickLink}>Create Item</li>
+        <li className={styles.quickLink}>Create Supplier</li>
       </ul>
     </div>
   );
