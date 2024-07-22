@@ -25,8 +25,26 @@ function Navigation() {
             Orders
           </NavLink>
         </li>
-        <li className={styles.navItem}>Inventory</li>
-        <li className={styles.navItem}>Suppliers</li>
+        <li className={styles.navItem}>
+          <NavLink
+            to="/inventory"
+            className={({ isActive }) =>
+              isActive ? styles.navItemActive : styles.navItem
+            }
+          >
+            Inventory
+          </NavLink>
+        </li>
+        <li className={styles.navItem}>
+          <NavLink
+            to="/suppliers"
+            className={({ isActive }) =>
+              isActive ? styles.navItemActive : styles.navItem
+            }
+          >
+            Suppliers
+          </NavLink>
+        </li>
       </ul>
     </nav>
   );
