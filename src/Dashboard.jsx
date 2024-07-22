@@ -4,27 +4,11 @@ import styles from "./styles/Dashboard.module.css";
 function Dashboard() {
   return (
     <div className={styles.dashboardContainer}>
-      <Navigation />
       <StockNeeded />
       <CustomerOrders />
       <SupplierOrders />
       <QuickLinks />
     </div>
-  );
-}
-
-function Navigation() {
-  return (
-    <nav className={styles.nav}>
-      <ul className={styles.navList}>
-        <li className={styles.activeNavItem}>Dashboard</li>
-        <li className={styles.navItem}>
-          <Link to="/orders">Orders</Link>
-        </li>
-        <li className={styles.navItem}>Inventory</li>
-        <li className={styles.navItem}>Suppliers</li>
-      </ul>
-    </nav>
   );
 }
 
@@ -38,7 +22,11 @@ function StockNeeded() {
         <li className={styles.listItem}>3x Lenovo laptop</li>
         <li className={styles.listItem}>10x keyboard</li>
       </ul>
-      <button className={styles.button}>Go to orders</button>
+      <button className={styles.button}>
+        <Link to="/orders" className={styles.navLink}>
+          Go to orders
+        </Link>
+      </button>
     </div>
   );
 }

@@ -1,0 +1,44 @@
+.nav {
+    width: 100%;
+    background-color: #f8f9fa;
+    padding: 7px 0px;
+}
+
+.navList {
+    display: flex;
+    justify-content: space-around;
+    list-style-type: none;
+    margin: 0px 5px;
+    padding: 0;
+    width: 100vw;
+
+}
+
+.navItem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 2px 5px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    width: 25vw;
+    
+}
+
+.navItem:hover {
+    background-color: #e9ecef;
+    color: #333;
+    text-decoration: none;
+}
+
+.navItemActive {
+    cursor: pointer;
+    padding: 5px 10px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-weight: bold;
+}
+
