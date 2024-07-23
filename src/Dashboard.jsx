@@ -52,6 +52,8 @@ function SupplierOrders() {
       <ul>
         <li className={styles.item}>2x Monitors - due 05/08</li>
         <li className={styles.item}>3x Docks - due 22/07</li>
+        <li className={styles.item}>3x Docks - due 22/07</li>
+        <li className={styles.item}>3x Docks - due 22/07</li>
       </ul>
     </div>
   );
