@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import "./styles/App.css";
 import Navigation from "./Navigation";
-import Dashboard from "./Dashboard";
+import { Dashboard } from "./Dashboard";
 import Orders from "./Orders";
 import Inventory from "./Inventory";
 import Suppliers from "./Suppliers";
