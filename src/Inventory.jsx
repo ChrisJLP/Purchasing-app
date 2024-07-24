@@ -1,9 +1,11 @@
 import styles from "./styles/Inventory.module.css";
+import { StockNeeded } from "./Dashboard";
 
 function Inventory() {
   return (
     <div className={styles.inventoryContainer}>
       <CurrentStock />
+      <StockNeeded />
     </div>
   );
 }

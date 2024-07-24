@@ -74,4 +74,4 @@ function QuickLinks() {
   );
 }
 
-export default Dashboard;
+export { Dashboard, StockNeeded };
