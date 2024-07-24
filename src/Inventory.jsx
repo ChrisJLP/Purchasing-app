@@ -10,10 +10,10 @@ function Inventory() {
 
 function CurrentStock() {
   const items = [
-    { name: "Laptop", stock: 5 },
-    { name: "Monitor", stock: 9 },
-    { name: "Dock", stock: 4 },
-    { name: "Keyboard", stock: 14 },
+    { name: "Laptop", stock: 5, minStock: 3 },
+    { name: "Monitor", stock: 9, minStock: 5 },
+    { name: "Dock", stock: 4, minStock: 4 },
+    { name: "Keyboard", stock: 14, minStock: 8 },
   ];
   return (
     <div className={styles.currentStockContainer}>
@@ -23,7 +23,7 @@ function CurrentStock() {
           <tr>
             <th>Item</th>
             <th>Stock</th>
-            <th></th>
+            <th>Min Stock</th>
           </tr>
         </thead>
         <tbody>
@@ -31,6 +31,7 @@ function CurrentStock() {
             <tr key={index} className={styles.tableRow}>
               <td>{item.name}</td>
               <td>{item.stock}</td>
+              <td>{item.minStock}</td>
               <td>
                 <button className={styles.editButton}>Edit</button>
               </td>
