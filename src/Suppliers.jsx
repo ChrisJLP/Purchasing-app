@@ -1,4 +1,5 @@
 import styles from "./styles/Suppliers.module.css";
+import { suppliersData } from "./data/suppliersData";
 
 function Suppliers() {
   return (
@@ -15,29 +16,13 @@ function CurrentSupplier() {
     <div className={styles.currentSupplierContainer}>
       <h2>Current Suppliers</h2>
       <ul className={styles.currentSupplierList}>
-        <li className={styles.currentSupplierItem}>
-          <span>Supplier A</span>
-          <button className={styles.ordersButton}>View Orders</button>
-          <button className={styles.ordersButton}>Edit Supplier</button>
-        </li>
-        <li>
-          {" "}
-          <span>Supplier B</span>
-          <button className={styles.ordersButton}>View Orders</button>
-          <button className={styles.ordersButton}>Edit Supplier</button>
-        </li>
-        <li>
-          {" "}
-          <span>Supplier C</span>
-          <button className={styles.ordersButton}>View Orders</button>
-          <button className={styles.ordersButton}>Edit Supplier</button>
-        </li>
-        <li>
-          {" "}
-          <span>Supplier D</span>
-          <button className={styles.ordersButton}>View Orders</button>
-          <button className={styles.ordersButton}>Edit Supplier</button>
-        </li>
+        {suppliersData.map((supplier) => (
+          <li key={supplier.id} className={styles.currentSupplierItem}>
+            <span>{supplier.name}</span>
+            <button className={styles.ordersButton}>View Orders</button>
+            <button className={styles.ordersButton}>Edit Supplier</button>
+          </li>
+        ))}
       </ul>
     </div>
   );
