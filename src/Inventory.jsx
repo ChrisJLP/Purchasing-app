@@ -1,4 +1,5 @@
 import styles from "./styles/Inventory.module.css";
+import { inventoryItems } from "./data/inventoryData";
 import { StockNeeded } from "./Dashboard";
 
 function Inventory() {
@@ -11,12 +12,6 @@ function Inventory() {
 }
 
 function CurrentStock() {
-  const items = [
-    { name: "Laptop", stock: 5, minStock: 3 },
-    { name: "Monitor", stock: 9, minStock: 5 },
-    { name: "Dock", stock: 4, minStock: 4 },
-    { name: "Keyboard", stock: 14, minStock: 8 },
-  ];
   return (
     <div className={styles.currentStockContainer}>
       <h2>Current Stock</h2>
@@ -29,7 +24,7 @@ function CurrentStock() {
           </tr>
         </thead>
         <tbody>
-          {items.map((item, index) => (
+          {inventoryItems.map((item, index) => (
             <tr key={index} className={styles.tableRow}>
               <td>{item.name}</td>
               <td>{item.stock}</td>
