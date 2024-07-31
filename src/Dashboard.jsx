@@ -1,9 +1,18 @@
 import { Link } from "react-router-dom";
 import styles from "./styles/Dashboard.module.css";
 import StockNeeded from "./StockNeeded";
+import { useInventory } from "./InventoryContext";
 
 function Dashboard() {
-  const stockNeededItems = [];
+  const { inventoryItems } = useInventory();
+
+  const stockNeededItems = inventoryItems
+    .filter((item) => item.stock < item.minStock)
+    .map((item) => ({
+      name: item.name,
+      quantity: item.minStock - item.stock,
+    }));
+
   return (
     <div className={styles.dashboardContainer}>
       <StockNeeded stockNeededItems={stockNeededItems} />
@@ -13,26 +22,6 @@ function Dashboard() {
     </div>
   );
 }
-
-// function StockNeeded() {
-//   return (
-//     <div className={styles.stockNeededContainer}>
-//       <h2>Stock needed</h2>
-//       <ul className={styles.list}>
-//         <li className={styles.listItem}>5x Asus Laptops</li>
-//         <li className={styles.listItem}>2x Monitors</li>
-//         <li className={styles.listItem}>3x Lenovo laptop</li>
-//         <li className={styles.listItem}>10x keyboard</li>
-//       </ul>
-//       <button className={styles.button}>
-//         <Link to="/orders" className={styles.navLink}>
-//           Go to orders
-//         </Link>{" "}
-//         {/* Dave was hear */}
-//       </button>
-//     </div>
-//   );
-// }
 
 function CustomerOrders() {
   return (

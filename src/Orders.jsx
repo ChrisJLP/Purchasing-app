@@ -1,43 +1,26 @@
 import styles from "./styles/Orders.module.css";
 import StockNeeded from "./StockNeeded";
+import { useInventory } from "./InventoryContext";
 
 function Orders() {
+  const { inventoryItems } = useInventory();
+
+  const stockNeededItems = inventoryItems
+    .filter((item) => item.stock < item.minStock)
+    .map((item) => ({
+      name: item.name,
+      quantity: item.minStock - item.stock,
+    }));
   return (
     <>
       <div className={styles.ordersContainer}>
-        <StockNeeded />
+        <StockNeeded stockNeededItems={stockNeededItems} />
         <RecentOrders />
         <NewOrderButton />
       </div>
     </>
   );
 }
-
-// function StockNeeded() {
-//   return (
-//     <div className={styles.stockNeededContainer}>
-//       <h2>Stock Needed</h2>
-//       <ul className={styles.stockNeededList}>
-//         <li className={styles.stockItem}>
-//           <span className={styles.stockNeededItem}>5x Asus Laptops</span>
-//           <button className={styles.button}>Order</button>
-//         </li>
-//         <li className={styles.stockItem}>
-//           <span>2x Monitors</span>
-//           <button className={styles.button}>Order</button>
-//         </li>
-//         <li className={styles.stockItem}>
-//           <span>3x Lenovo Laptops</span>
-//           <button className={styles.button}>Order</button>
-//         </li>
-//         <li className={styles.stockItem}>
-//           <span>10x Keyboards</span>
-//           <button className={styles.button}>Order</button>
-//         </li>
-//       </ul>
-//     </div>
-//   );
-// }
 
 function RecentOrders() {
   return (

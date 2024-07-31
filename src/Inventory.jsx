@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from "react";
 import styles from "./styles/Inventory.module.css";
-import { inventoryItems as initialInventoryItems } from "./data/inventoryData";
+import { useInventory } from "./InventoryContext";
 import StockNeeded from "./StockNeeded";
 
 function Inventory() {
-  const [inventoryItems, setInventoryItems] = useState(initialInventoryItems);
+  const { inventoryItems, setInventoryItems } = useInventory();
 
   const stockNeededItems = useMemo(() => {
     return inventoryItems
