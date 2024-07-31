@@ -53,7 +53,7 @@ th {
     font-weight: bold;
 }
 
-input {
+input[type='number'] {
     width: 25px;
 }
 

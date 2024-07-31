@@ -1,80 +1,27 @@
-// import { useState } from "react";
-// import styles from "./styles/Inventory.module.css";
-// import { inventoryItems as initialInventoryItems } from "./data/inventoryData";
-// import { StockNeeded } from "./Dashboard";
-
-// function Inventory() {
-//   const [inventoryItems, setInventoryItems] = useState(initialInventoryItems);
-//   return (
-//     <div className={styles.inventoryContainer}>
-//       <CurrentStock
-//         inventoryItems={inventoryItems}
-//         setInventoryItems={setInventoryItems}
-//       />
-//       <StockNeeded />
-//     </div>
-//   );
-// }
-
-// function CurrentStock({ inventoryItems, setInventoryItems }) {
-//   const handleEdit = (index) => {
-//     const updatedItems = [...inventoryItems];
-//     updatedItems[index] = {
-//       ...updatedItems[index],
-//       minStock: 6,
-//     };
-//     setInventoryItems(updatedItems);
-//     console.log("Edit items:", inventoryItems[index]);
-//   };
-//   return (
-//     <div className={styles.currentStockContainer}>
-//       <h2>Current Stock</h2>
-//       <table>
-//         <thead>
-//           <tr>
-//             <th>Item</th>
-//             <th>Stock</th>
-//             <th>Min Stock</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {inventoryItems.map((item, index) => (
-//             <tr key={index} className={styles.tableRow}>
-//               <td>{item.name}</td>
-//               <td>{item.stock}</td>
-//               <td>{item.minStock}</td>
-//               <td>
-//                 <button
-//                   className={styles.editButton}
-//                   onClick={() => handleEdit(index)}
-//                 >
-//                   Edit
-//                 </button>
-//               </td>
-//             </tr>
-//           ))}
-//         </tbody>
-//       </table>
-//     </div>
-//   );
-// }
-
-// export default Inventory;
-
-import { useState } from "react";
+import React, { useState, useMemo } from "react";
 import styles from "./styles/Inventory.module.css";
 import { inventoryItems as initialInventoryItems } from "./data/inventoryData";
-import { StockNeeded } from "./Dashboard";
+import StockNeeded from "./StockNeeded";
 
 function Inventory() {
   const [inventoryItems, setInventoryItems] = useState(initialInventoryItems);
+
+  const stockNeededItems = useMemo(() => {
+    return inventoryItems
+      .filter((item) => item.stock < item.minStock)
+      .map((item) => ({
+        name: item.name,
+        quantity: item.minStock - item.stock,
+      }));
+  }, [inventoryItems]);
+
   return (
     <div className={styles.inventoryContainer}>
       <CurrentStock
         inventoryItems={inventoryItems}
         setInventoryItems={setInventoryItems}
       />
-      <StockNeeded />
+      <StockNeeded stockNeededItems={stockNeededItems} />
     </div>
   );
 }

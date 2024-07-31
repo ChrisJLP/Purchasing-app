@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import styles from "./styles/Dashboard.module.css";
+import StockNeeded from "./StockNeeded";
 
 function Dashboard() {
+  const stockNeededItems = [];
   return (
     <div className={styles.dashboardContainer}>
-      <StockNeeded />
+      <StockNeeded stockNeededItems={stockNeededItems} />
       <CustomerOrders />
       <SupplierOrders />
       <QuickLinks />
@@ -12,25 +14,25 @@ function Dashboard() {
   );
 }
 
-function StockNeeded() {
-  return (
-    <div className={styles.stockNeededContainer}>
-      <h2>Stock needed</h2>
-      <ul className={styles.list}>
-        <li className={styles.listItem}>5x Asus Laptops</li>
-        <li className={styles.listItem}>2x Monitors</li>
-        <li className={styles.listItem}>3x Lenovo laptop</li>
-        <li className={styles.listItem}>10x keyboard</li>
-      </ul>
-      <button className={styles.button}>
-        <Link to="/orders" className={styles.navLink}>
-          Go to orders
-        </Link>{" "}
-        {/* Dave was hear */}
-      </button>
-    </div>
-  );
-}
+// function StockNeeded() {
+//   return (
+//     <div className={styles.stockNeededContainer}>
+//       <h2>Stock needed</h2>
+//       <ul className={styles.list}>
+//         <li className={styles.listItem}>5x Asus Laptops</li>
+//         <li className={styles.listItem}>2x Monitors</li>
+//         <li className={styles.listItem}>3x Lenovo laptop</li>
+//         <li className={styles.listItem}>10x keyboard</li>
+//       </ul>
+//       <button className={styles.button}>
+//         <Link to="/orders" className={styles.navLink}>
+//           Go to orders
+//         </Link>{" "}
+//         {/* Dave was hear */}
+//       </button>
+//     </div>
+//   );
+// }
 
 function CustomerOrders() {
   return (
