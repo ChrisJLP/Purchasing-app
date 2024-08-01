@@ -1,9 +1,11 @@
+import React, { useState } from "react";
 import styles from "./styles/Orders.module.css";
 import StockNeeded from "./StockNeeded";
 import { useInventory } from "./InventoryContext";
 
 function Orders() {
   const { inventoryItems } = useInventory();
+  const [showForm, setShowForm] = useState(false);
 
   const stockNeededItems = inventoryItems
     .filter((item) => item.stock < item.minStock)
@@ -11,12 +13,17 @@ function Orders() {
       name: item.name,
       quantity: item.minStock - item.stock,
     }));
+
+  const handleNewOrderClick = () => {
+    setShowForm(!showForm);
+  };
   return (
     <>
       <div className={styles.ordersContainer}>
         <StockNeeded stockNeededItems={stockNeededItems} />
         <RecentOrders />
-        <NewOrderButton />
+        <NewOrderButton onClick={handleNewOrderClick} />
+        {showForm && <OrderForm />}
       </div>
     </>
   );
@@ -38,8 +45,24 @@ function RecentOrders() {
   );
 }
 
-function NewOrderButton() {
-  return <button className={styles.newOrderButton}>Place a new order</button>;
+function NewOrderButton({ onClick }) {
+  return (
+    <button className={styles.newOrderButton} onClick={onClick}>
+      Place a new order
+    </button>
+  );
+}
+
+function OrderForm() {
+  return (
+    <div className={styles.formContainer}>
+      <form>
+        <fieldset>
+          <legend>New Order</legend>
+        </fieldset>
+      </form>
+    </div>
+  );
 }
 
 export default Orders;
