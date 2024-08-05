@@ -65,7 +65,9 @@ function OrderForm() {
     const supplierId = parseInt(e.target.value, 10);
     const supplier = suppliersData.find((s) => s.id === supplierId);
     setSelectedSupplier(supplier);
-    setOrderLines([{ itemId: "", itemName: "", quantity: "", price: "" }]);
+    setOrderLines([
+      { itemId: "", itemName: "", quantity: "", price: "", basePrice: "" },
+    ]);
   };
 
   const resetOrderLineFields = (orderLine) => {
@@ -84,16 +86,21 @@ function OrderForm() {
       );
       if (matchedItem) {
         updatedOrderLines[index].itemName = matchedItem.name;
+        updatedOrderLines[index].quantity = "1";
         const itemSupplier = matchedItem.suppliers.find(
           (supplier) => supplier.id === selectedSupplier.id
         );
-        updatedOrderLines[index].price = itemSupplier ? itemSupplier.price : "";
+        updatedOrderLines[index].basePrice = itemSupplier
+          ? itemSupplier.price
+          : "";
+        updatedOrderLines[index].price = updatedOrderLines[index].basePrice;
       } else {
         resetOrderLineFields(updatedOrderLines[index]);
       }
     } else {
       resetOrderLineFields(updatedOrderLines[index]);
     }
+
     setOrderLines(updatedOrderLines);
   };
 
@@ -102,7 +109,8 @@ function OrderForm() {
 
     if (updatedOrderLines[index].itemName !== "") {
       updatedOrderLines[index].quantity = value;
-      updatedOrderLines[index].price = updatedOrderLines[index].price * value;
+      updatedOrderLines[index].price =
+        updatedOrderLines[index].basePrice * value;
     } else {
       updatedOrderLines[index].quantity = "";
     }
