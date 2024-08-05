@@ -5,8 +5,8 @@ export const inventoryItems = [
     stock: 5,
     minStock: 3,
     suppliers: [
-      { id: 1, name: "Supplier A" },
-      { id: 2, name: "Supplier B" },
+      { id: 1, name: "Supplier A", price: "699" },
+      { id: 2, name: "Supplier B", price: "799" },
     ],
   },
   {
@@ -14,7 +14,10 @@ export const inventoryItems = [
     name: "Monitor",
     stock: 9,
     minStock: 5,
-    suppliers: [{ id: 3, name: "Supplier C", price: "300" }],
+    suppliers: [
+      { id: 1, name: "Supplier A", price: "499" },
+      { id: 3, name: "Supplier C", price: "300" },
+    ],
   },
   {
     id: 3,
@@ -22,8 +25,8 @@ export const inventoryItems = [
     stock: 4,
     minStock: 4,
     suppliers: [
-      { id: 1, name: "Supplier A" },
-      { id: 4, name: "Supplier D" },
+      { id: 1, name: "Supplier A", price: "150" },
+      { id: 4, name: "Supplier D", price: "99" },
     ],
   },
   {
@@ -31,6 +34,6 @@ export const inventoryItems = [
     name: "Keyboard",
     stock: 14,
     minStock: 8,
-    suppliers: [{ id: 2, name: "Supplier B" }],
+    suppliers: [{ id: 2, name: "Supplier B", price: "49" }],
   },
 ];

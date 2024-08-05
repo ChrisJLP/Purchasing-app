@@ -72,9 +72,9 @@ function OrderForm() {
     const updatedOrderLines = [...orderLines];
     updatedOrderLines[index].itemId = value;
 
-    if (selectedSupplier.itemIds.includes(parseInt(value, 10))) {
+    if (selectedSupplier.itemIds.includes(parseInt(value))) {
       const matchedItem = inventoryItems.find(
-        (item) => item.id === parseInt(value, 10)
+        (item) => item.id === parseInt(value)
       );
       if (matchedItem) {
         updatedOrderLines[index].itemName = matchedItem.name;
@@ -85,9 +85,24 @@ function OrderForm() {
       } else {
         updatedOrderLines[index].itemName = "";
         updatedOrderLines[index].price = "";
+        updatedOrderLines[index].quantity = "";
       }
     } else {
       updatedOrderLines[index].itemName = "";
+      updatedOrderLines[index].price = "";
+      updatedOrderLines[index].quantity = "";
+    }
+    setOrderLines(updatedOrderLines);
+  };
+
+  const handleQtyChange = (index, value) => {
+    const updatedOrderLines = [...orderLines];
+
+    if (updatedOrderLines[index].itemName !== "") {
+      updatedOrderLines[index].quantity = value;
+      updatedOrderLines[index].price = updatedOrderLines[index].price * value;
+    } else {
+      updatedOrderLines[index].quantity = "";
     }
     setOrderLines(updatedOrderLines);
   };
@@ -140,6 +155,7 @@ function OrderForm() {
                   value={line.quantity}
                   placeholder="Qty"
                   className={styles.input}
+                  onChange={(e) => handleQtyChange(index, e.target.value)}
                 />
                 <input
                   type="number"
