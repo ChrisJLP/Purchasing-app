@@ -58,7 +58,7 @@ function OrderForm() {
   const { inventoryItems } = useInventory();
   const [selectedSupplier, setSelectedSupplier] = useState(suppliersData[0]);
   const [orderLines, setOrderLines] = useState([
-    { itemId: "1", itemName: "", quantity: "", price: "" },
+    { itemId: "", itemName: "", quantity: "", price: "" },
   ]);
 
   const handleSupplierChange = (e) => {
@@ -78,8 +78,13 @@ function OrderForm() {
       );
       if (matchedItem) {
         updatedOrderLines[index].itemName = matchedItem.name;
+        const itemSupplier = matchedItem.suppliers.find(
+          (supplier) => supplier.id === selectedSupplier.id
+        );
+        updatedOrderLines[index].price = itemSupplier ? itemSupplier.price : "";
       } else {
         updatedOrderLines[index].itemName = "";
+        updatedOrderLines[index].price = "";
       }
     } else {
       updatedOrderLines[index].itemName = "";

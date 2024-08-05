@@ -9,7 +9,7 @@ export const suppliersData = [
     contact: "John Smith",
     email: "jsmith@outlook.com",
     mobile: "07755645332",
-    itemIds: [1, 2],
+    itemIds: [1, 2, 3],
   },
   {
     id: 2,

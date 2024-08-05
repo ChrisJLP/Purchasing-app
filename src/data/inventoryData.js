@@ -14,7 +14,7 @@ export const inventoryItems = [
     name: "Monitor",
     stock: 9,
     minStock: 5,
-    suppliers: [{ id: 3, name: "Supplier C" }],
+    suppliers: [{ id: 3, name: "Supplier C", price: "300" }],
   },
   {
     id: 3,
