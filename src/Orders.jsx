@@ -68,6 +68,12 @@ function OrderForm() {
     setOrderLines([{ itemId: "", itemName: "", quantity: "", price: "" }]);
   };
 
+  const resetOrderLineFields = (orderLine) => {
+    orderLine.itemName = "";
+    orderLine.price = "";
+    orderLine.quantity = "";
+  };
+
   const handleItemIdChange = (index, value) => {
     const updatedOrderLines = [...orderLines];
     updatedOrderLines[index].itemId = value;
@@ -83,14 +89,10 @@ function OrderForm() {
         );
         updatedOrderLines[index].price = itemSupplier ? itemSupplier.price : "";
       } else {
-        updatedOrderLines[index].itemName = "";
-        updatedOrderLines[index].price = "";
-        updatedOrderLines[index].quantity = "";
+        resetOrderLineFields(updatedOrderLines[index]);
       }
     } else {
-      updatedOrderLines[index].itemName = "";
-      updatedOrderLines[index].price = "";
-      updatedOrderLines[index].quantity = "";
+      resetOrderLineFields(updatedOrderLines[index]);
     }
     setOrderLines(updatedOrderLines);
   };
