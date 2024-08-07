@@ -7,6 +7,10 @@ import { suppliersData } from "./data/suppliersData";
 function Orders() {
   const { inventoryItems } = useInventory();
   const [showForm, setShowForm] = useState(false);
+  const [selectedSupplier, setSelectedSupplier] = useState(suppliersData[0]);
+  const [orderLines, setOrderLines] = useState([
+    { itemId: "", itemName: "", quantity: "", price: "" },
+  ]);
 
   const stockNeededItems = inventoryItems
     .filter((item) => item.stock < item.minStock)
@@ -28,7 +32,15 @@ function Orders() {
         <StockNeeded stockNeededItems={stockNeededItems} />
         <RecentOrders />
         <NewOrderButton onClick={handleNewOrderClick} />
-        {showForm && <OrderForm onClose={handleCloseForm} />}
+        {showForm && (
+          <OrderForm
+            onClose={handleCloseForm}
+            selectedSupplier={selectedSupplier}
+            setSelectedSupplier={setSelectedSupplier}
+            orderLines={orderLines}
+            setOrderLines={setOrderLines}
+          />
+        )}
       </div>
     </>
   );
@@ -58,12 +70,14 @@ function NewOrderButton({ onClick }) {
   );
 }
 
-function OrderForm({ onClose }) {
+function OrderForm({
+  onClose,
+  selectedSupplier,
+  setSelectedSupplier,
+  orderLines,
+  setOrderLines,
+}) {
   const { inventoryItems } = useInventory();
-  const [selectedSupplier, setSelectedSupplier] = useState(suppliersData[0]);
-  const [orderLines, setOrderLines] = useState([
-    { itemId: "", itemName: "", quantity: "", price: "" },
-  ]);
 
   const handleSupplierChange = (e) => {
     const supplierId = parseInt(e.target.value, 10);
