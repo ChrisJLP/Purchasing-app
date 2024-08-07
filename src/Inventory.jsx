@@ -51,10 +51,10 @@ function CurrentStock({ inventoryItems, setInventoryItems }) {
   return (
     <div className={styles.currentStockContainer}>
       <h2>Current Stock</h2>
-      <table>
+      <table className={styles.inventoryTable}>
         <thead>
-          <tr>
-            <th>Item</th>
+          <tr className={styles.inventoryTr}>
+            <th className={styles.inventoryTh}>Item</th>
             <th>Stock</th>
             <th>Min Stock</th>
             <th>Actions</th>
@@ -69,6 +69,7 @@ function CurrentStock({ inventoryItems, setInventoryItems }) {
                   <input
                     type="number"
                     value={editedStock}
+                    className={styles.inventoryNumInput}
                     onChange={(e) => setEditedStock(e.target.value)}
                   />
                 ) : (
@@ -80,6 +81,7 @@ function CurrentStock({ inventoryItems, setInventoryItems }) {
                   <input
                     type="number"
                     value={editedMinStock}
+                    className={styles.inventoryNumInput}
                     onChange={(e) => setEditedMinStock(e.target.value)}
                   />
                 ) : (

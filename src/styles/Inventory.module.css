@@ -39,22 +39,27 @@
     font-size: 14px;
 }
 
-table {
+.inventoryTable {
     width: 100%;
     border-collapse: collapse;
+    display: table;
 }
 
-th, td {
+.inventoryTh, .inventoryTd {
     padding: 5px 10px;
     text-align: left;
 }
 
-th {
+.inventoryTable tr {
+    display: table-row;
+}
+
+.inventoryTh {
     font-weight: bold;
 }
 
-input[type='number'] {
-    width: 25px;
+.inventoryNumInput {
+    width: 25px !important;
 }
 
 

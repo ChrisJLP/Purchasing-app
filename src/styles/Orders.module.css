@@ -38,14 +38,10 @@
     margin-top: 10%;
 }
 
-
-
 form {
     height: 100%;
     width: 100%;
 }
-
-
 
 .stockNeededList {
     list-style-type: none;
@@ -116,7 +112,7 @@ span {
     margin-top: 60%;
 }
 
-fieldset {
+.formContainer fieldset {
     border: none;
     display: flex;
     flex-direction: column;
@@ -125,7 +121,7 @@ fieldset {
     height: 100%;
 }
 
-legend {
+.formContainer legend {
     margin-bottom: 20px;
     font-size: 1.2em;
     font-weight: bold;
@@ -162,6 +158,52 @@ legend {
     color: black;
     position: static;
     
+}
+
+.orderTable {
+    display: flex;
+    flex-direction: column;
+}
+
+.orderLine {
+    display: flex;
+    gap: 2px;
+}
+
+.formContainer td {
+    padding: 0px !important;
+    margin: 0px !important;
+}
+
+.formContainer tbody {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.orderTable tr {
+    display: flex;
+    gap: 5px;
+    margin: 0px 5px;
+}
+.itemIdInput {
+    width: 50px;
+    padding: 0px;
+}
+
+.itemNameInput {
+    width: 90px;
+}
+
+.quantityInput {
+    width: 40px !important;
+}
+
+.priceInput {
+    width: 40px !important;
+}
+
+.itemIdInput, .itemNameInput, .quantityInput, .priceInput {
+    height: 24px !important;
 }
 
 .closeFormButtonContainer {

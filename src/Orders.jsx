@@ -18,13 +18,17 @@ function Orders() {
   const handleNewOrderClick = () => {
     setShowForm(!showForm);
   };
+
+  const handleCloseForm = () => {
+    setShowForm(false);
+  };
   return (
     <>
       <div className={styles.ordersContainer}>
         <StockNeeded stockNeededItems={stockNeededItems} />
         <RecentOrders />
         <NewOrderButton onClick={handleNewOrderClick} />
-        {showForm && <OrderForm />}
+        {showForm && <OrderForm onClose={handleCloseForm} />}
       </div>
     </>
   );
@@ -54,7 +58,7 @@ function NewOrderButton({ onClick }) {
   );
 }
 
-function OrderForm() {
+function OrderForm({ onClose }) {
   const { inventoryItems } = useInventory();
   const [selectedSupplier, setSelectedSupplier] = useState(suppliersData[0]);
   const [orderLines, setOrderLines] = useState([
@@ -117,6 +121,33 @@ function OrderForm() {
     setOrderLines(updatedOrderLines);
   };
 
+  const handleRemoveLine = (index, event) => {
+    event.preventDefault();
+    setOrderLines((prevLines) => {
+      if (prevLines.length > 1) {
+        return prevLines.filter((_, i) => i !== index);
+      }
+      return prevLines; // Don't remove if it's the last line
+    });
+  };
+
+  const handleAddLine = () => {
+    setOrderLines((prevLines) => {
+      if (prevLines.length >= 8) {
+        return prevLines;
+      }
+      return [
+        ...prevLines,
+        { itemId: "", itemName: "", quantity: "", price: "", basePrice: "" },
+      ];
+    });
+  };
+
+  const handleCloseClick = (e) => {
+    e.preventDefault();
+    onClose();
+  };
+
   return (
     <div className={styles.formContainer}>
       <form>
@@ -143,41 +174,77 @@ function OrderForm() {
               ))}
             </select>
           </div>
-          <div>
-            {orderLines.map((line, index) => (
-              <>
-                <input
-                  type="text"
-                  value={line.itemId}
-                  placeholder="Item ID"
-                  className={styles.input}
-                  onChange={(e) => handleItemIdChange(index, e.target.value)}
-                />
-                <input
-                  type="text"
-                  value={line.itemName}
-                  placeholder="Item"
-                  readOnly
-                  className={styles.input}
-                />
-                <input
-                  type="number"
-                  value={line.quantity}
-                  placeholder="Qty"
-                  className={styles.input}
-                  onChange={(e) => handleQtyChange(index, e.target.value)}
-                />
-                <input
-                  type="number"
-                  value={line.price}
-                  placeholder="Price"
-                  className={styles.input}
-                />
-              </>
-            ))}
+          <div className={styles.OrderLineHeader}>
+            <p></p>
           </div>
+          <table className={styles.orderTable}>
+            <thead>
+              <tr>
+                <th>Item ID</th>
+                <th>Item</th>
+                <th>Qty</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody className={styles.orderLine}>
+              {orderLines.map((line, index) => (
+                <tr key={index}>
+                  <td>
+                    <input
+                      type="text"
+                      value={line.itemId}
+                      placeholder="Item ID"
+                      className={styles.itemIdInput}
+                      onChange={(e) =>
+                        handleItemIdChange(index, e.target.value)
+                      }
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={line.itemName}
+                      placeholder="Item"
+                      readOnly
+                      className={styles.itemNameInput}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      value={line.quantity}
+                      placeholder="Qty"
+                      className={styles.quantityInput}
+                      onChange={(e) => handleQtyChange(index, e.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      value={line.price}
+                      placeholder="Price"
+                      className={styles.priceInput}
+                    />
+                  </td>
+                  <td>
+                    <button onClick={(e) => handleRemoveLine(index, e)}>
+                      Remove
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button type="button" onClick={handleAddLine}>
+            Add New Line
+          </button>
           <div className={styles.closeFormButtonContainer}>
-            <button className={styles.closeFormButton}>Close</button>
+            <button
+              className={styles.closeFormButton}
+              onClick={handleCloseClick}
+            >
+              Close
+            </button>
           </div>
         </fieldset>
       </form>
