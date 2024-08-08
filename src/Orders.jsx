@@ -2,15 +2,19 @@ import React, { useState } from "react";
 import styles from "./styles/Orders.module.css";
 import StockNeeded from "./StockNeeded";
 import { useInventory } from "./InventoryContext";
+import { useOrder } from "./OrderContext";
 import { suppliersData } from "./data/suppliersData";
 
 function Orders() {
   const { inventoryItems } = useInventory();
-  const [showForm, setShowForm] = useState(false);
-  const [selectedSupplier, setSelectedSupplier] = useState(suppliersData[0]);
-  const [orderLines, setOrderLines] = useState([
-    { itemId: "", itemName: "", quantity: "", price: "" },
-  ]);
+  const {
+    showForm,
+    setShowForm,
+    selectedSupplier,
+    setSelectedSupplier,
+    orderLines,
+    setOrderLines,
+  } = useOrder();
 
   const stockNeededItems = inventoryItems
     .filter((item) => item.stock < item.minStock)
@@ -70,14 +74,20 @@ function NewOrderButton({ onClick }) {
   );
 }
 
-function OrderForm({
-  onClose,
-  selectedSupplier,
-  setSelectedSupplier,
-  orderLines,
-  setOrderLines,
-}) {
+function OrderForm({ onClose }) {
   const { inventoryItems } = useInventory();
+  const {
+    selectedSupplier,
+    setSelectedSupplier,
+    orderLines,
+    setOrderLines,
+    deliveryDate,
+    setDeliveryDate,
+  } = useOrder();
+
+  const handleDeliveryDateChange = (e) => {
+    setDeliveryDate(e.target.value);
+  };
 
   const handleSupplierChange = (e) => {
     const supplierId = parseInt(e.target.value, 10);
@@ -98,7 +108,10 @@ function OrderForm({
     const updatedOrderLines = [...orderLines];
     updatedOrderLines[index].itemId = value;
 
-    if (selectedSupplier.itemIds.includes(parseInt(value))) {
+    if (
+      selectedSupplier &&
+      selectedSupplier.itemIds.includes(parseInt(value))
+    ) {
       const matchedItem = inventoryItems.find(
         (item) => item.id === parseInt(value)
       );
@@ -147,7 +160,7 @@ function OrderForm({
 
   const handleAddLine = () => {
     setOrderLines((prevLines) => {
-      if (prevLines.length >= 8) {
+      if (prevLines.length >= 6) {
         return prevLines;
       }
       return [
@@ -252,6 +265,24 @@ function OrderForm({
           <button type="button" onClick={handleAddLine}>
             Add New Line
           </button>
+          <div className={styles.formGroup}>
+            <label htmlFor="deliveryDate" className={styles.label}>
+              Delivery Date:
+            </label>
+            <input
+              type="date"
+              id="deliveryDate"
+              name="deliveryDate"
+              value={deliveryDate}
+              onChange={handleDeliveryDateChange}
+              className={styles.dateInput}
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <button type="submit" className={styles.placeOrderButton}>
+              Place Order
+            </button>
+          </div>
           <div className={styles.closeFormButtonContainer}>
             <button
               className={styles.closeFormButton}

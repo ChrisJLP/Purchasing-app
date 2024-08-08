@@ -6,22 +6,25 @@ import Orders from "./Orders";
 import Inventory from "./Inventory";
 import Suppliers from "./Suppliers";
 import { InventoryProvider } from "./InventoryContext";
+import { OrderProvider } from "./OrderContext";
 
 function App() {
   return (
-    <InventoryProvider>
-      <Router>
-        <div>
-          <Navigation />
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/orders" element={<Orders />} />
-            <Route path="/inventory" element={<Inventory />} />
-            <Route path="/suppliers" element={<Suppliers />} />
-          </Routes>
-        </div>
-      </Router>
-    </InventoryProvider>
+    <OrderProvider>
+      <InventoryProvider>
+        <Router>
+          <div>
+            <Navigation />
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/orders" element={<Orders />} />
+              <Route path="/inventory" element={<Inventory />} />
+              <Route path="/suppliers" element={<Suppliers />} />
+            </Routes>
+          </div>
+        </Router>
+      </InventoryProvider>
+    </OrderProvider>
   );
 }
 

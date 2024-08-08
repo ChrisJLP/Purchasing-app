@@ -2,7 +2,7 @@ export const inventoryItems = [
   {
     id: 1,
     name: "Laptop",
-    stock: 5,
+    stock: 2,
     minStock: 3,
     suppliers: [
       { id: 1, name: "Supplier A", price: "699" },
@@ -12,7 +12,7 @@ export const inventoryItems = [
   {
     id: 2,
     name: "Monitor",
-    stock: 9,
+    stock: 3,
     minStock: 5,
     suppliers: [
       { id: 1, name: "Supplier A", price: "499" },
