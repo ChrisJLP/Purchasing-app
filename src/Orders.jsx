@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./styles/Orders.module.css";
 import StockNeeded from "./StockNeeded";
 import { useInventory } from "./InventoryContext";
@@ -6,7 +6,7 @@ import { useOrder } from "./OrderContext";
 import { suppliersData } from "./data/suppliersData";
 
 function Orders() {
-  const { inventoryItems } = useInventory();
+  const { inventoryItems, recalculateStockNeeded } = useInventory();
   const {
     showForm,
     setShowForm,
@@ -16,11 +16,15 @@ function Orders() {
     setOrderLines,
   } = useOrder();
 
+  useEffect(() => {
+    recalculateStockNeeded();
+  }, [recalculateStockNeeded]);
+
   const stockNeededItems = inventoryItems
-    .filter((item) => item.stock < item.minStock)
+    .filter((item) => item.stockNeeded > 0)
     .map((item) => ({
       name: item.name,
-      quantity: item.minStock - item.stock,
+      quantity: item.stockNeeded,
     }));
 
   const handleNewOrderClick = () => {

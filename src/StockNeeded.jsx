@@ -13,7 +13,7 @@ function StockNeeded({ stockNeededItems = [] }) {
       ) : (
         <ul className={styles.list}>
           {stockNeededItems.map((item, index) => (
-            <li key={index} className={styles.listItem}>
+            <li key={index} className={styles.stockItem}>
               {item.quantity}x {item.name}
             </li>
           ))}
