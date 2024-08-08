@@ -40,7 +40,8 @@ function CustomerOrders() {
 function SupplierOrders() {
   return (
     <div className={styles.supplierOrderContainer}>
-      <h2>Recent Supplier Orders</h2>
+      <h2>Current Supplier Orders</h2>
+      {/* //Make this use data from Orders.jsx */}
       <ul>
         <li className={styles.item}>2x Monitors - due 05/08</li>
         <li className={styles.item}>3x Docks - due 22/07</li>

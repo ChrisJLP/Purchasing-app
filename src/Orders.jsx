@@ -34,7 +34,7 @@ function Orders() {
     <>
       <div className={styles.ordersContainer}>
         <StockNeeded stockNeededItems={stockNeededItems} />
-        <RecentOrders />
+        <CurrentOrders />
         <NewOrderButton onClick={handleNewOrderClick} />
         {showForm && (
           <OrderForm
@@ -50,12 +50,12 @@ function Orders() {
   );
 }
 
-function RecentOrders() {
+function CurrentOrders() {
   return (
     <>
-      <div className={styles.recentOrdersContainer}>
-        <h2>Recent Orders</h2>
-        <ul className={styles.recentOrdersList}>
+      <div className={styles.currentOrdersContainer}>
+        <h2>Current Orders</h2>
+        <ul className={styles.currentOrdersList}>
           <li>2x Monitors - Due 05/08</li>
           <li>3x Docks - Due 22/07</li>
           <li>3x Docks - Due 22/07</li>
@@ -83,6 +83,7 @@ function OrderForm({ onClose }) {
     setOrderLines,
     deliveryDate,
     setDeliveryDate,
+    placeOrder,
   } = useOrder();
 
   const handleDeliveryDateChange = (e) => {
@@ -170,6 +171,18 @@ function OrderForm({ onClose }) {
     });
   };
 
+  const handlePlaceOrder = (e) => {
+    e.preventDefault();
+    const order = {
+      supplier: selectedSupplier,
+      lines: orderLines,
+      deliveryDate,
+      date: new Date().toISOString(),
+    };
+    placeOrder(order);
+    onClose();
+  };
+
   const handleCloseClick = (e) => {
     e.preventDefault();
     onClose();
@@ -177,7 +190,7 @@ function OrderForm({ onClose }) {
 
   return (
     <div className={styles.formContainer}>
-      <form>
+      <form onSubmit={handlePlaceOrder}>
         <fieldset>
           <legend>New Order</legend>
           <div className={styles.formGroup}>

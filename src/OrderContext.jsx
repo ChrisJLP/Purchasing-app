@@ -10,6 +10,16 @@ export function OrderProvider({ children }) {
     { itemId: "", itemName: "", quantity: "", price: "" },
   ]);
   const [deliveryDate, setDeliveryDate] = useState("");
+  const [currentOrders, setCurrentOrders] = useState([]);
+
+  const placeOrder = (order) => {
+    setCurrentOrders([...currentOrders, order]);
+    setShowForm(false);
+    setOrderLines([
+      { itemId: "", itemName: "", quantity: "", price: "", basePrice: "" },
+    ]);
+    setDeliveryDate(new Date().toISOString().split("T")[0]);
+  };
 
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
@@ -25,6 +35,8 @@ export function OrderProvider({ children }) {
         setSelectedSupplier,
         orderLines,
         setOrderLines,
+        currentOrders,
+        placeOrder,
       }}
     >
       {children}
