@@ -15,9 +15,8 @@ export function OrderProvider({ children }) {
   const { updateStockNeeded } = useInventory();
 
   const placeOrder = (order) => {
-    const newOrders = [...currentOrders, order];
-    setCurrentOrders(newOrders);
-    updateStockNeeded(newOrders);
+    setCurrentOrders((prevOrders) => [...prevOrders, order]);
+    updateStockNeeded(order);
     setShowForm(false);
     setOrderLines([
       { itemId: "", itemName: "", quantity: "", price: "", basePrice: "" },

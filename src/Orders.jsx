@@ -6,7 +6,7 @@ import { useOrder } from "./OrderContext";
 import { suppliersData } from "./data/suppliersData";
 
 function Orders() {
-  const { inventoryItems, recalculateStockNeeded } = useInventory();
+  const { recalculateStockNeeded, stockNeededItems } = useInventory();
   const {
     showForm,
     setShowForm,
@@ -19,13 +19,6 @@ function Orders() {
   useEffect(() => {
     recalculateStockNeeded();
   }, [recalculateStockNeeded]);
-
-  const stockNeededItems = inventoryItems
-    .filter((item) => item.stockNeeded > 0)
-    .map((item) => ({
-      name: item.name,
-      quantity: item.stockNeeded,
-    }));
 
   const handleNewOrderClick = () => {
     setShowForm(!showForm);

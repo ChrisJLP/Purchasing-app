@@ -4,16 +4,8 @@ import { useInventory } from "./InventoryContext";
 import StockNeeded from "./StockNeeded";
 
 function Inventory() {
-  const { inventoryItems, setInventoryItems } = useInventory();
-
-  const stockNeededItems = useMemo(() => {
-    return inventoryItems
-      .filter((item) => item.stock < item.minStock)
-      .map((item) => ({
-        name: item.name,
-        quantity: item.minStock - item.stock,
-      }));
-  }, [inventoryItems]);
+  const { inventoryItems, setInventoryItems, stockNeededItems } =
+    useInventory();
 
   return (
     <div className={styles.inventoryContainer}>
@@ -56,6 +48,7 @@ function CurrentStock({ inventoryItems, setInventoryItems }) {
           <tr className={styles.inventoryTr}>
             <th className={styles.inventoryTh}>Item</th>
             <th>Stock</th>
+            <th>On Order</th>
             <th>Min Stock</th>
             <th>Actions</th>
           </tr>

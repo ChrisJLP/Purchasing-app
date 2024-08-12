@@ -1,4 +1,10 @@
-import React, { createContext, useState, useContext, useCallback } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useCallback,
+  useMemo,
+} from "react";
 import { inventoryItems as initialInventoryItems } from "./data/inventoryData";
 
 const InventoryContext = createContext();
@@ -6,30 +12,25 @@ const InventoryContext = createContext();
 export function InventoryProvider({ children }) {
   const [inventoryItems, setInventoryItems] = useState(initialInventoryItems);
 
-  const updateStockNeeded = (currentOrders) => {
-    const updatedItems = inventoryItems.map((item) => {
-      const orderedQuantity = currentOrders.reduce((total, order) => {
-        const orderLine = order.lines.find(
+  const updateStockNeeded = useCallback((newOrder) => {
+    setInventoryItems((prevItems) =>
+      prevItems.map((item) => {
+        const orderLine = newOrder.lines.find(
           (line) => parseInt(line.itemId) === item.id
         );
-        return total + (orderLine ? parseInt(orderLine.quantity) : 0);
-      }, 0);
+        const orderedQuantity = orderLine ? parseInt(orderLine.quantity) : 0;
 
-      const newOnOrder = item.onOrder + orderedQuantity;
-      const stockNeeded = Math.max(
-        0,
-        item.minStock - (item.stock + newOnOrder)
-      );
-
-      return {
-        ...item,
-        onOrder: newOnOrder,
-        stockNeeded,
-      };
-    });
-
-    setInventoryItems(updatedItems);
-  };
+        return {
+          ...item,
+          onOrder: item.onOrder + orderedQuantity,
+          stockNeeded: Math.max(
+            0,
+            item.minStock - (item.stock + item.onOrder + orderedQuantity)
+          ),
+        };
+      })
+    );
+  }, []);
 
   const recalculateStockNeeded = useCallback(() => {
     setInventoryItems((prevItems) =>
@@ -40,6 +41,15 @@ export function InventoryProvider({ children }) {
     );
   }, []);
 
+  const stockNeededItems = useMemo(() => {
+    return inventoryItems
+      .filter((item) => item.stockNeeded > 0)
+      .map((item) => ({
+        name: item.name,
+        quantity: item.stockNeeded,
+      }));
+  }, [inventoryItems]);
+
   return (
     <InventoryContext.Provider
       value={{
@@ -47,6 +57,7 @@ export function InventoryProvider({ children }) {
         setInventoryItems,
         updateStockNeeded,
         recalculateStockNeeded,
+        stockNeededItems,
       }}
     >
       {children}
