@@ -76,6 +76,7 @@ function CurrentStock({ inventoryItems, setInventoryItems }) {
                   item.stock
                 )}
               </td>
+              <td>{item.onOrder}</td>
               <td>
                 {editIndex === index ? (
                   <input
