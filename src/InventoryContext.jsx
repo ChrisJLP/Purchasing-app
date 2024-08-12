@@ -15,12 +15,15 @@ export function InventoryProvider({ children }) {
         return total + (orderLine ? parseInt(orderLine.quantity) : 0);
       }, 0);
 
-      const newStock = item.stock + orderedQuantity;
-      const stockNeeded = Math.max(0, item.minStock - newStock);
+      const newOnOrder = item.onOrder + orderedQuantity;
+      const stockNeeded = Math.max(
+        0,
+        item.minStock - (item.stock + newOnOrder)
+      );
 
       return {
         ...item,
-        stock: newStock,
+        onOrder: newOnOrder,
         stockNeeded,
       };
     });
@@ -32,7 +35,7 @@ export function InventoryProvider({ children }) {
     setInventoryItems((prevItems) =>
       prevItems.map((item) => ({
         ...item,
-        stockNeeded: Math.max(0, item.minStock - item.stock),
+        stockNeeded: Math.max(0, item.minStock - (item.stock + item.onOrder)),
       }))
     );
   }, []);
