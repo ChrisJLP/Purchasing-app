@@ -4,14 +4,11 @@ import StockNeeded from "./StockNeeded";
 import { useInventory } from "./InventoryContext";
 
 function Dashboard() {
-  const { inventoryItems } = useInventory();
+  const { stockNeededItems, isInitialized } = useInventory();
 
-  const stockNeededItems = inventoryItems
-    .filter((item) => item.stock < item.minStock)
-    .map((item) => ({
-      name: item.name,
-      quantity: item.minStock - item.stock,
-    }));
+  if (!isInitialized) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className={styles.dashboardContainer}>

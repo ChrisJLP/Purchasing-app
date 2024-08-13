@@ -4,6 +4,7 @@ import React, {
   useContext,
   useCallback,
   useMemo,
+  useEffect,
 } from "react";
 import { inventoryItems as initialInventoryItems } from "./data/inventoryData";
 
@@ -11,50 +12,67 @@ const InventoryContext = createContext();
 
 export function InventoryProvider({ children }) {
   const [inventoryItems, setInventoryItems] = useState(initialInventoryItems);
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  const updateStockNeeded = useCallback((newOrder) => {
-    setInventoryItems((prevItems) =>
-      prevItems.map((item) => {
-        const orderLine = newOrder.lines.find(
-          (line) => parseInt(line.itemId) === item.id
-        );
-        const orderedQuantity = orderLine ? parseInt(orderLine.quantity) : 0;
-
-        return {
-          ...item,
-          onOrder: item.onOrder + orderedQuantity,
-          stockNeeded: Math.max(
-            0,
-            item.minStock - (item.stock + item.onOrder + orderedQuantity)
-          ),
-        };
-      })
-    );
+  const calculateStockNeeded = useCallback((items) => {
+    return items.map((item) => ({
+      ...item,
+      stockNeeded: Math.max(0, item.minStock - (item.stock + item.onOrder)),
+    }));
   }, []);
+
+  const initializeInventory = useCallback(() => {
+    setInventoryItems((prevItems) => calculateStockNeeded(prevItems));
+    setIsInitialized(true);
+  }, [calculateStockNeeded]);
+
+  useEffect(() => {
+    if (!isInitialized) {
+      initializeInventory();
+    }
+  }, [isInitialized, initializeInventory]);
+
+  const updateStockNeeded = useCallback(
+    (newOrder) => {
+      setInventoryItems((prevItems) =>
+        calculateStockNeeded(
+          prevItems.map((item) => {
+            const orderLine = newOrder.lines.find(
+              (line) => parseInt(line.itemId) === item.id
+            );
+            const orderedQuantity = orderLine
+              ? parseInt(orderLine.quantity)
+              : 0;
+
+            return {
+              ...item,
+              onOrder: item.onOrder + orderedQuantity,
+            };
+          })
+        )
+      );
+    },
+    [calculateStockNeeded]
+  );
 
   const recalculateStockNeeded = useCallback(() => {
-    setInventoryItems((prevItems) =>
-      prevItems.map((item) => ({
-        ...item,
-        stockNeeded: Math.max(0, item.minStock - (item.stock + item.onOrder)),
-      }))
-    );
-  }, []);
+    setInventoryItems((prevItems) => calculateStockNeeded(prevItems));
+  }, [calculateStockNeeded]);
 
-  const updateStockLevel = useCallback((index, newStock, newMinStock) => {
-    setInventoryItems((prevItems) => {
-      const updatedItems = [...prevItems];
-      updatedItems[index] = {
-        ...updatedItems[index],
-        stock: parseInt(newStock),
-        minStock: parseInt(newMinStock),
-      };
-      return updatedItems.map((item) => ({
-        ...item,
-        stockNeeded: Math.max(0, item.minStock - (item.stock + item.onOrder)),
-      }));
-    });
-  }, []);
+  const updateStockLevel = useCallback(
+    (index, newStock, newMinStock) => {
+      setInventoryItems((prevItems) => {
+        const updatedItems = [...prevItems];
+        updatedItems[index] = {
+          ...updatedItems[index],
+          stock: parseInt(newStock),
+          minStock: parseInt(newMinStock),
+        };
+        return calculateStockNeeded(updatedItems);
+      });
+    },
+    [calculateStockNeeded]
+  );
 
   const stockNeededItems = useMemo(() => {
     return inventoryItems
@@ -75,6 +93,7 @@ export function InventoryProvider({ children }) {
         recalculateStockNeeded,
         updateStockLevel,
         stockNeededItems,
+        isInitialized,
       }}
     >
       {children}

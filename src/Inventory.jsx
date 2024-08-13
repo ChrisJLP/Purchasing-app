@@ -4,7 +4,11 @@ import { useInventory } from "./InventoryContext";
 import StockNeeded from "./StockNeeded";
 
 function Inventory() {
-  const { inventoryItems, stockNeededItems } = useInventory();
+  const { inventoryItems, stockNeededItems, isInitialized } = useInventory();
+
+  if (!isInitialized) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className={styles.inventoryContainer}>
