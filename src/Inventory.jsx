@@ -1,27 +1,24 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import styles from "./styles/Inventory.module.css";
 import { useInventory } from "./InventoryContext";
 import StockNeeded from "./StockNeeded";
 
 function Inventory() {
-  const { inventoryItems, setInventoryItems, stockNeededItems } =
-    useInventory();
+  const { inventoryItems, stockNeededItems } = useInventory();
 
   return (
     <div className={styles.inventoryContainer}>
-      <CurrentStock
-        inventoryItems={inventoryItems}
-        setInventoryItems={setInventoryItems}
-      />
+      <CurrentStock inventoryItems={inventoryItems} />
       <StockNeeded stockNeededItems={stockNeededItems} />
     </div>
   );
 }
 
-function CurrentStock({ inventoryItems, setInventoryItems }) {
+function CurrentStock({ inventoryItems }) {
   const [editIndex, setEditIndex] = useState(null);
   const [editedStock, setEditedStock] = useState("");
   const [editedMinStock, setEditedMinStock] = useState("");
+  const { updateStockLevel } = useInventory();
 
   const handleEdit = (index) => {
     setEditIndex(index);
@@ -30,13 +27,7 @@ function CurrentStock({ inventoryItems, setInventoryItems }) {
   };
 
   const handleSave = (index) => {
-    const updatedItems = [...inventoryItems];
-    updatedItems[index] = {
-      ...updatedItems[index],
-      stock: editedStock,
-      minStock: editedMinStock,
-    };
-    setInventoryItems(updatedItems);
+    updateStockLevel(index, editedStock, editedMinStock);
     setEditIndex(null);
   };
 

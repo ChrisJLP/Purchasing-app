@@ -41,6 +41,21 @@ export function InventoryProvider({ children }) {
     );
   }, []);
 
+  const updateStockLevel = useCallback((index, newStock, newMinStock) => {
+    setInventoryItems((prevItems) => {
+      const updatedItems = [...prevItems];
+      updatedItems[index] = {
+        ...updatedItems[index],
+        stock: parseInt(newStock),
+        minStock: parseInt(newMinStock),
+      };
+      return updatedItems.map((item) => ({
+        ...item,
+        stockNeeded: Math.max(0, item.minStock - (item.stock + item.onOrder)),
+      }));
+    });
+  }, []);
+
   const stockNeededItems = useMemo(() => {
     return inventoryItems
       .filter((item) => item.stockNeeded > 0)
@@ -58,6 +73,7 @@ export function InventoryProvider({ children }) {
         setInventoryItems,
         updateStockNeeded,
         recalculateStockNeeded,
+        updateStockLevel,
         stockNeededItems,
       }}
     >
