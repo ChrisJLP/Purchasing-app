@@ -1,8 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./styles/Dashboard.module.css";
+import StockItemDetails from "./StockItemDetails";
 
-function StockNeeded({ stockNeededItems = [] }) {
+function StockNeeded({ stockNeededItems = [], inventoryItems }) {
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const handleItemClick = (item) => {
+    const fullItemDetails = inventoryItems.find(
+      (invItem) => invItem.id === item.id
+    );
+    setSelectedItem(fullItemDetails);
+  };
+
+  const handleCloseDetails = () => {
+    setSelectedItem(null);
+  };
+
   return (
     <div className={styles.stockNeededContainer}>
       <h2>Stock needed</h2>
@@ -12,9 +26,14 @@ function StockNeeded({ stockNeededItems = [] }) {
         </p>
       ) : (
         <ul className={styles.list}>
-          {stockNeededItems.map((item, index) => (
-            <li key={index} className={styles.stockItem}>
-              {item.quantity}x {item.name}
+          {stockNeededItems.map((item) => (
+            <li key={item.id} className={styles.stockItem}>
+              <button
+                onClick={() => handleItemClick(item)}
+                className={styles.stockItemButton}
+              >
+                {item.quantity}x {item.name}
+              </button>
             </li>
           ))}
         </ul>
@@ -24,6 +43,9 @@ function StockNeeded({ stockNeededItems = [] }) {
           Go to orders
         </Link>
       </button>
+      {selectedItem && (
+        <StockItemDetails item={selectedItem} onClose={handleCloseDetails} />
+      )}
     </div>
   );
 }

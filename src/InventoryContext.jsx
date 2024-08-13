@@ -45,6 +45,7 @@ export function InventoryProvider({ children }) {
     return inventoryItems
       .filter((item) => item.stockNeeded > 0)
       .map((item) => ({
+        id: item.id,
         name: item.name,
         quantity: item.stockNeeded,
       }));

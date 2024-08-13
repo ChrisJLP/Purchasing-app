@@ -6,7 +6,8 @@ import { useOrder } from "./OrderContext";
 import { suppliersData } from "./data/suppliersData";
 
 function Orders() {
-  const { recalculateStockNeeded, stockNeededItems } = useInventory();
+  const { recalculateStockNeeded, stockNeededItems, inventoryItems } =
+    useInventory();
   const {
     showForm,
     setShowForm,
@@ -27,10 +28,14 @@ function Orders() {
   const handleCloseForm = () => {
     setShowForm(false);
   };
+
   return (
     <>
       <div className={styles.ordersContainer}>
-        <StockNeeded stockNeededItems={stockNeededItems} />
+        <StockNeeded
+          stockNeededItems={stockNeededItems}
+          inventoryItems={inventoryItems}
+        />
         <CurrentOrders />
         <NewOrderButton onClick={handleNewOrderClick} />
         {showForm && (
