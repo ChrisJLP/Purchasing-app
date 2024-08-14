@@ -13,7 +13,11 @@ function Inventory() {
   return (
     <div className={styles.inventoryContainer}>
       <CurrentStock inventoryItems={inventoryItems} />
-      <StockNeeded stockNeededItems={stockNeededItems} />
+      <StockNeeded
+        stockNeededItems={stockNeededItems}
+        inventoryItems={inventoryItems}
+        isClickable={false}
+      />
     </div>
   );
 }

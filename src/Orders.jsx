@@ -35,6 +35,7 @@ function Orders() {
         <StockNeeded
           stockNeededItems={stockNeededItems}
           inventoryItems={inventoryItems}
+          isClickable={true}
         />
         <CurrentOrders />
         <NewOrderButton onClick={handleNewOrderClick} />

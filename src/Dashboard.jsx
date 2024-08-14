@@ -4,7 +4,7 @@ import StockNeeded from "./StockNeeded";
 import { useInventory } from "./InventoryContext";
 
 function Dashboard() {
-  const { stockNeededItems, isInitialized } = useInventory();
+  const { stockNeededItems, inventoryItems, isInitialized } = useInventory();
 
   if (!isInitialized) {
     return <div>Loading...</div>;
@@ -12,7 +12,11 @@ function Dashboard() {
 
   return (
     <div className={styles.dashboardContainer}>
-      <StockNeeded stockNeededItems={stockNeededItems} />
+      <StockNeeded
+        stockNeededItems={stockNeededItems}
+        inventoryItems={inventoryItems}
+        isClickable={false}
+      />
       <CustomerOrders />
       <SupplierOrders />
       <QuickLinks />
