@@ -4,6 +4,7 @@ import StockNeeded from "./StockNeeded";
 import { useInventory } from "./InventoryContext";
 import { useOrder } from "./OrderContext";
 import { suppliersData } from "./data/suppliersData";
+import OrderDetailsPopup from "./OrderDetailsPopup";
 
 function Orders() {
   const { recalculateStockNeeded, stockNeededItems, inventoryItems } =
@@ -15,10 +16,15 @@ function Orders() {
     setSelectedSupplier,
     orderLines,
     setOrderLines,
+    currentOrders,
   } = useOrder();
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   useEffect(() => {
     recalculateStockNeeded();
+    setIsLoading(false);
   }, [recalculateStockNeeded]);
 
   const handleNewOrderClick = () => {
@@ -29,6 +35,14 @@ function Orders() {
     setShowForm(false);
   };
 
+  const onOrderClick = (order) => {
+    setSelectedOrder(order);
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
       <div className={styles.ordersContainer}>
@@ -36,8 +50,9 @@ function Orders() {
           stockNeededItems={stockNeededItems}
           inventoryItems={inventoryItems}
           isClickable={true}
+          showOrderButton={false}
         />
-        <CurrentOrders />
+        <CurrentOrders orders={currentOrders} onOrderClick={onOrderClick} />
         <NewOrderButton onClick={handleNewOrderClick} />
         {showForm && (
           <OrderForm
@@ -49,20 +64,58 @@ function Orders() {
           />
         )}
       </div>
+      {selectedOrder && (
+        <OrderDetailsPopup
+          order={selectedOrder}
+          onClose={() => setSelectedOrder(null)}
+        />
+      )}
     </>
   );
 }
 
-function CurrentOrders() {
+function CurrentOrders({ orders, onOrderClick }) {
+  if (!orders || !Array.isArray(orders) || orders.length == 0) {
+    return (
+      <div className={styles.currentOrdersContainer}>
+        <h2>Current Orders</h2>
+        <p>No orders available.</p>
+      </div>
+    );
+  }
+
+  const groupedOrders = orders.reduce((acc, order) => {
+    if (!acc[order.deliveryDate]) {
+      acc[order.deliveryDate] = [];
+    }
+    acc[order.deliveryDate].push(order);
+    return acc;
+  }, {});
+
   return (
     <>
       <div className={styles.currentOrdersContainer}>
         <h2>Current Orders</h2>
         <ul className={styles.currentOrdersList}>
-          <li>2x Monitors - Due 05/08</li>
-          <li>3x Docks - Due 22/07</li>
-          <li>3x Docks - Due 22/07</li>
-          <li>3x Docks - Due 22/07</li>
+          {Object.entries(groupedOrders).map(([date, dateOrders]) =>
+            dateOrders.map((order, index) => (
+              <li
+                key={`${date}-${index}`}
+                className={styles.orderItem}
+                onClick={() => onOrderClick(order)}
+              >
+                {order.lines.map((line, lineIndex) => (
+                  <span
+                    key={`${line.itemId}-${lineIndex}`}
+                    className={styles.orderLine}
+                  >
+                    {line.quantity}x {line.itemName} - Due{" "}
+                    {new Date(date).toLocaleDateString("en-GB")}
+                  </span>
+                ))}
+              </li>
+            ))
+          )}
         </ul>
       </div>
     </>
