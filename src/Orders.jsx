@@ -51,6 +51,7 @@ function Orders() {
           inventoryItems={inventoryItems}
           isClickable={true}
           showOrderButton={false}
+          isOrdersPage={true}
         />
         <CurrentOrders orders={currentOrders} onOrderClick={onOrderClick} />
         <NewOrderButton onClick={handleNewOrderClick} />
@@ -79,7 +80,7 @@ function CurrentOrders({ orders, onOrderClick }) {
     return (
       <div className={styles.currentOrdersContainer}>
         <h2>Current Orders</h2>
-        <p>No orders available.</p>
+        <p>No current orders.</p>
       </div>
     );
   }

@@ -4,14 +4,17 @@ import styles from "./styles/StockItemDetails.module.css";
 function StockItemDetails({ item, onClose }) {
   return (
     <div className={styles.stockItemDetailsContainer}>
-      <h2>Stock Item</h2>
       <p>
         <strong>Description:</strong> {item.name}
       </p>
-      <p>
-        <strong>Suppliers:</strong>
-        {item.suppliers.map((supplier) => supplier.name).join(", ")}
-      </p>
+
+      <ul className={styles.suppliersList}>
+        {item.suppliers.map((supplier) => (
+          <li key={supplier.id} className={styles.supplierItem}>
+            {supplier.name}: £{supplier.price}
+          </li>
+        ))}
+      </ul>
       <p>
         <strong>Item code:</strong>
         {item.id}

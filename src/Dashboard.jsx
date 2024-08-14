@@ -16,6 +16,7 @@ function Dashboard() {
         stockNeededItems={stockNeededItems}
         inventoryItems={inventoryItems}
         isClickable={false}
+        showOrderButton={true}
       />
       <CustomerOrders />
       <SupplierOrders />

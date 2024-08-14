@@ -17,7 +17,7 @@ export const inventoryItems = [
     onOrder: 0,
     minStock: 5,
     suppliers: [
-      { id: 1, name: "Supplier A", price: "499" },
+      { id: 1, name: "Supplier A", price: "299" },
       { id: 3, name: "Supplier C", price: "300" },
     ],
   },

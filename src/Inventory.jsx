@@ -17,6 +17,7 @@ function Inventory() {
         stockNeededItems={stockNeededItems}
         inventoryItems={inventoryItems}
         isClickable={false}
+        showOrderButton={true}
       />
     </div>
   );
