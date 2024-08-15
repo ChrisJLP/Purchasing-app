@@ -144,6 +144,14 @@ function OrderForm({ onClose }) {
   } = useOrder();
   const [errorMessage, setErrorMessage] = useState("");
 
+  useEffect(() => {
+    if (selectedSupplier && orderLines.length === 0) {
+      setOrderLines([
+        { itemId: "", itemName: "", quantity: "", price: "", basePrice: "" },
+      ]);
+    }
+  }, [selectedSupplier, orderLines.length, setOrderLines]);
+
   const handleDeliveryDateChange = (e) => {
     setDeliveryDate(e.target.value);
   };
