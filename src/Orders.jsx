@@ -117,6 +117,9 @@ function CurrentOrders({ orders, onOrderClick }) {
                 className={styles.orderItem}
                 onClick={() => onOrderClick(order)}
               >
+                <span className={styles.orderNumber}>
+                  Order Number: {order.orderNumber}
+                </span>
                 {order.lines.map((line, lineIndex) => (
                   <span
                     key={`${line.itemId}-${lineIndex}`}

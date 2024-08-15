@@ -8,7 +8,7 @@ function OrderDetailsPopup({ order, onClose }) {
   };
   return (
     <div className={styles.orderDetailsContainer}>
-      <h2>Order Details</h2>
+      <h2>Purchase order {order.orderNumber}</h2>
       <p>
         <strong>Supplier:</strong> {order.supplier.name}
       </p>

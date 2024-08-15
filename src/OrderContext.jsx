@@ -9,11 +9,23 @@ export function OrderProvider({ children }) {
   const [orderLines, setOrderLines] = useState([]);
   const [deliveryDate, setDeliveryDate] = useState("");
   const [currentOrders, setCurrentOrders] = useState([]);
+  const [lastOrderNumber, setLastOrderNumber] = useState(0);
   const { updateStockNeeded } = useInventory();
 
+  const getNextOrderNumber = () => {
+    const nextNumber = lastOrderNumber + 1;
+    setLastOrderNumber(nextNumber);
+    return nextNumber.toString().padStart(4, "0");
+  };
+
   const placeOrder = (order) => {
-    setCurrentOrders((prevOrders) => [...prevOrders, order]);
-    updateStockNeeded(order);
+    const orderNumber = getNextOrderNumber();
+    const newOrder = {
+      ...order,
+      orderNumber,
+    };
+    setCurrentOrders((prevOrders) => [...prevOrders, newOrder]);
+    updateStockNeeded(newOrder);
     setShowForm(false);
     setOrderLines([]);
     setSelectedSupplier(null);
