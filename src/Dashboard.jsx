@@ -1,10 +1,13 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import styles from "./styles/Dashboard.module.css";
 import StockNeeded from "./StockNeeded";
 import { useInventory } from "./InventoryContext";
+import { useOrder } from "./OrderContext";
 
 function Dashboard() {
   const { stockNeededItems, inventoryItems, isInitialized } = useInventory();
+  const { currentOrders } = useOrder();
 
   if (!isInitialized) {
     return <div>Loading...</div>;
@@ -19,7 +22,7 @@ function Dashboard() {
         showOrderButton={true}
       />
       <CustomerOrders />
-      <SupplierOrders />
+      <SupplierOrders currentOrders={currentOrders} />
       <QuickLinks />
     </div>
   );
@@ -39,16 +42,30 @@ function CustomerOrders() {
   );
 }
 
-function SupplierOrders() {
+function SupplierOrders({ currentOrders }) {
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getDate().toString().padStart(2, "0")}/${(
+      date.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}`;
+  };
   return (
     <div className={styles.supplierOrderContainer}>
       <h2>Current Supplier Orders</h2>
-      {/* //Make this use data from Orders.jsx */}
       <ul>
-        <li className={styles.item}>2x Monitors - due 05/08</li>
-        <li className={styles.item}>3x Docks - due 22/07</li>
-        <li className={styles.item}>3x Docks - due 22/07</li>
-        <li className={styles.item}>3x Docks - due 22/07</li>
+        {currentOrders.slice(0, 4).map((order, index) => (
+          <li key={index} className={styles.item}>
+            {order.lines.map((line, lineIndex) => (
+              <span key={lineIndex}>
+                {line.quantity}x {line.itemName}
+              </span>
+            ))}
+            {" - due "}
+            {formatDate(order.deliveryDate)}
+          </li>
+        ))}
       </ul>
     </div>
   );
