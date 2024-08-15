@@ -76,8 +76,11 @@ function QuickLinks() {
     <div className={styles.quickLinksContainer}>
       <h2>Quick Links</h2>
       <ul className={styles.quickLinksList}>
-        <li className={styles.quickLink}>Create Order</li>
-        <li className={styles.quickLink}>Search Item</li>
+        <li className={styles.quickLink}>
+          <Link to="/orders" state={{ openOrderForm: true }}>
+            Create Order
+          </Link>
+        </li>
         <li className={styles.quickLink}>Search Supplier</li>
         <li className={styles.quickLink}>Create Item</li>
         <li className={styles.quickLink}>Create Supplier</li>

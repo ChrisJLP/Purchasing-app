@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import styles from "./styles/Orders.module.css";
 import StockNeeded from "./StockNeeded";
 import { useInventory } from "./InventoryContext";
@@ -22,10 +23,21 @@ function Orders() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
-  useEffect(() => {
-    recalculateStockNeeded();
-    setIsLoading(false);
-  }, [recalculateStockNeeded]);
+  const location = useLocation();
+
+  useEffect(
+    () => {
+      recalculateStockNeeded();
+      setIsLoading(false);
+
+      if (location.state && location.state.openOrderForm) {
+        setShowForm(true);
+      }
+    },
+    [recalculateStockNeeded],
+    location.state,
+    setShowForm
+  );
 
   const handleNewOrderClick = () => {
     setShowForm(!showForm);
