@@ -152,9 +152,7 @@ function OrderForm({ onClose }) {
     const supplierId = parseInt(e.target.value, 10);
     const supplier = suppliersData.find((s) => s.id === supplierId);
     setSelectedSupplier(supplier);
-    setOrderLines([
-      { itemId: "", itemName: "", quantity: "", price: "", basePrice: "" },
-    ]);
+    setOrderLines([]);
   };
 
   const resetOrderLineFields = (orderLine) => {
@@ -284,7 +282,9 @@ function OrderForm({ onClose }) {
               id="supplier"
               className={styles.select}
               onChange={handleSupplierChange}
+              value={selectedSupplier ? selectedSupplier.id : ""}
             >
+              <option value="">Select a supplier</option>
               {suppliersData.map((supplier) => (
                 <option
                   key={supplier.id}
