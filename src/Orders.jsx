@@ -142,6 +142,7 @@ function OrderForm({ onClose }) {
     setDeliveryDate,
     placeOrder,
   } = useOrder();
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleDeliveryDateChange = (e) => {
     setDeliveryDate(e.target.value);
@@ -228,16 +229,40 @@ function OrderForm({ onClose }) {
     });
   };
 
+  const validateOrder = () => {
+    if (!selectedSupplier) {
+      return "Please select a supplier.";
+    }
+    if (!deliveryDate) {
+      return "Please select a delivery date.";
+    }
+    if (orderLines.length === 0) {
+      return "Please add at least one item to the order.";
+    }
+    for (const line of orderLines) {
+      if (!line.itemId || !line.quantity || parseInt(line.quantity) <= 0) {
+        return "Please ensure all order lines have a valid item ID and quantity.";
+      }
+    }
+    return "";
+  };
+
   const handlePlaceOrder = (e) => {
     e.preventDefault();
-    const order = {
-      supplier: selectedSupplier,
-      lines: orderLines,
-      deliveryDate,
-      date: new Date().toISOString(),
-    };
-    placeOrder(order);
-    onClose();
+    const error = validateOrder();
+
+    if (error) {
+      setErrorMessage(error);
+    } else {
+      const order = {
+        supplier: selectedSupplier,
+        lines: orderLines,
+        deliveryDate,
+        date: new Date().toISOString(),
+      };
+      placeOrder(order);
+      onClose();
+    }
   };
 
   const handleCloseClick = (e) => {
@@ -363,6 +388,25 @@ function OrderForm({ onClose }) {
           </div>
         </fieldset>
       </form>
+      {errorMessage && (
+        <ErrorPopup
+          message={errorMessage}
+          onClose={() => setErrorMessage("")}
+        />
+      )}
+    </div>
+  );
+}
+
+function ErrorPopup({ message, onClose }) {
+  console.log("Error!");
+  return (
+    <div className={styles.errorPopup}>
+      <div className={styles.errorContent}>
+        <h3>Error</h3>
+        <p>{message}</p>
+        <button onClick={onClose}>Close</button>
+      </div>
     </div>
   );
 }
