@@ -5,9 +5,11 @@ import EditSupplierForm from "./editSupplierForm";
 import SupplierOrdersView from "./SuppliersOrdersView";
 import NewSupplierForm from "./NewSupplierForm";
 import { useOrder } from "./OrderContext";
+import { useSupplier } from "./SupplierContext";
 
 function Suppliers() {
-  const [suppliers, setSuppliers] = useState(suppliersData);
+  const { suppliers, addSupplier, updateSupplier, deleteSupplier } =
+    useSupplier();
   const [editingSupplier, setEditingSupplier] = useState(null);
   const [viewingOrdersSupplier, setViewingOrdersSupplier] = useState(null);
   const [isCreatingNewSupplier, setIsCreatingNewSupplier] = useState(false);
@@ -23,11 +25,7 @@ function Suppliers() {
   };
 
   const handleSaveEdit = (editedSupplier) => {
-    setSuppliers((prevSuppliers) =>
-      prevSuppliers.map((supplier) =>
-        supplier.id === editedSupplier.id ? editedSupplier : supplier
-      )
-    );
+    updateSupplier(editedSupplier);
     setEditingSupplier(null);
   };
 
@@ -48,22 +46,15 @@ function Suppliers() {
   };
 
   const handleSaveNewSupplier = (newSupplier) => {
-    const newSupplierId = Math.max(...suppliers.map((s) => s.id)) + 1;
-    const supplierToAdd = {
-      ...newSupplier,
-      id: newSupplierId,
-    };
-    setSuppliers((prevSuppliers) => [...prevSuppliers, supplierToAdd]);
+    addSupplier(newSupplier);
     setIsCreatingNewSupplier(false);
   };
 
   const handleDeleteSupplier = (supplierId) => {
     const supplierToDelete = suppliers.find((s) => s.id === supplierId);
-    setSuppliers((prevSuppliers) =>
-      prevSuppliers.filter((s) => s.id !== supplierId)
-    );
+    deleteSupplier(supplierId);
     setEditingSupplier(null);
-    setDeletedSupplierName(suppliertoDelete.name);
+    setDeletedSupplierName(supplierToDelete.name);
   };
 
   const handleCloseDeletedMessage = () => {
