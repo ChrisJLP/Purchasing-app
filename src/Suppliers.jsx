@@ -3,12 +3,14 @@ import styles from "./styles/Suppliers.module.css";
 import { suppliersData } from "./data/suppliersData";
 import EditSupplierForm from "./editSupplierForm";
 import SupplierOrdersView from "./SuppliersOrdersView";
+import NewSupplierForm from "./NewSupplierForm";
 import { useOrder } from "./OrderContext";
 
 function Suppliers() {
   const [suppliers, setSuppliers] = useState(suppliersData);
   const [editingSupplier, setEditingSupplier] = useState(null);
   const [viewingOrdersSupplier, setViewingOrdersSupplier] = useState(null);
+  const [isCreatingNewSupplier, setIsCreatingNewSupplier] = useState(false);
   const { currentOrders } = useOrder();
 
   const handleEditClick = (supplier) => {
@@ -36,6 +38,24 @@ function Suppliers() {
     setViewingOrdersSupplier(null);
   };
 
+  const handleNewSupplierClick = () => {
+    setIsCreatingNewSupplier(true);
+  };
+
+  const handleCloseNewSupplierForm = () => {
+    setIsCreatingNewSupplier(false);
+  };
+
+  const handleSaveNewSupplier = (newSupplier) => {
+    const newSupplierId = Math.max(...suppliers.map((s) => s.id)) + 1;
+    const supplierToAdd = {
+      ...newSupplier,
+      id: newSupplierId,
+    };
+    setSuppliers((prevSuppliers) => [...prevSuppliers, supplierToAdd]);
+    setIsCreatingNewSupplier(false);
+  };
+
   return (
     <div className={styles.supplierContainer}>
       <SearchSuppliers />
@@ -44,7 +64,7 @@ function Suppliers() {
         onEditClick={handleEditClick}
         onViewOrdersClick={handleViewOrdersClick}
       />
-      <NewSupplierButton />
+      <NewSupplierButton onClick={handleNewSupplierClick} />
       {editingSupplier && (
         <EditSupplierForm
           supplier={editingSupplier}
@@ -57,6 +77,12 @@ function Suppliers() {
           supplier={viewingOrdersSupplier}
           orders={currentOrders}
           onClose={handleCloseOrdersView}
+        />
+      )}
+      {isCreatingNewSupplier && (
+        <NewSupplierForm
+          onClose={handleCloseNewSupplierForm}
+          onSave={handleSaveNewSupplier}
         />
       )}
     </div>
@@ -102,9 +128,11 @@ function SearchSuppliers() {
   );
 }
 
-function NewSupplierButton() {
+function NewSupplierButton({ onClick }) {
   return (
-    <button className={styles.newSupplierButton}>Create a new supplier</button>
+    <button className={styles.newSupplierButton} onClick={onClick}>
+      Create a new supplier
+    </button>
   );
 }
 
