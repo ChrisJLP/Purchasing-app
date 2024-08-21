@@ -2,10 +2,14 @@ import React, { useState } from "react";
 import styles from "./styles/Suppliers.module.css";
 import { suppliersData } from "./data/suppliersData";
 import EditSupplierForm from "./editSupplierForm";
+import SupplierOrdersView from "./SuppliersOrdersView";
+import { useOrder } from "./OrderContext";
 
 function Suppliers() {
   const [suppliers, setSuppliers] = useState(suppliersData);
   const [editingSupplier, setEditingSupplier] = useState(null);
+  const [viewingOrdersSupplier, setViewingOrdersSupplier] = useState(null);
+  const { currentOrders } = useOrder();
 
   const handleEditClick = (supplier) => {
     setEditingSupplier(supplier);
@@ -23,10 +27,23 @@ function Suppliers() {
     );
     setEditingSupplier(null);
   };
+
+  const handleViewOrdersClick = (supplier) => {
+    setViewingOrdersSupplier(supplier);
+  };
+
+  const handleCloseOrdersView = () => {
+    setViewingOrdersSupplier(null);
+  };
+
   return (
     <div className={styles.supplierContainer}>
       <SearchSuppliers />
-      <CurrentSupplier suppliers={suppliers} onEditClick={handleEditClick} />
+      <CurrentSupplier
+        suppliers={suppliers}
+        onEditClick={handleEditClick}
+        onViewOrdersClick={handleViewOrdersClick}
+      />
       <NewSupplierButton />
       {editingSupplier && (
         <EditSupplierForm
@@ -35,11 +52,18 @@ function Suppliers() {
           onSave={handleSaveEdit}
         />
       )}
+      {viewingOrdersSupplier && (
+        <SupplierOrdersView
+          supplier={viewingOrdersSupplier}
+          orders={currentOrders}
+          onClose={handleCloseOrdersView}
+        />
+      )}
     </div>
   );
 }
 
-function CurrentSupplier({ suppliers, onEditClick }) {
+function CurrentSupplier({ suppliers, onEditClick, onViewOrdersClick }) {
   return (
     <div className={styles.currentSupplierContainer}>
       <h2>Current Suppliers</h2>
@@ -47,7 +71,12 @@ function CurrentSupplier({ suppliers, onEditClick }) {
         {suppliers.map((supplier) => (
           <li key={supplier.id} className={styles.currentSupplierItem}>
             <span>{supplier.name}</span>
-            <button className={styles.ordersButton}>View Orders</button>
+            <button
+              className={styles.ordersButton}
+              onClick={() => onViewOrdersClick(supplier)}
+            >
+              View Orders
+            </button>
             <button
               className={styles.ordersButton}
               onClick={() => onEditClick(supplier)}
