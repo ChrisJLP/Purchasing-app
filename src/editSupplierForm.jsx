@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styles from "./styles/EditSupplierForm.module.css";
+import styles from "./styles/editSupplierForm.module.css";
 
 function EditSupplierForm({ supplier, onClose, onSave }) {
   const [editedSupplier, setEditedSupplier] = useState(supplier);
