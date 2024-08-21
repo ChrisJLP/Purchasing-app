@@ -11,6 +11,7 @@ function Suppliers() {
   const [editingSupplier, setEditingSupplier] = useState(null);
   const [viewingOrdersSupplier, setViewingOrdersSupplier] = useState(null);
   const [isCreatingNewSupplier, setIsCreatingNewSupplier] = useState(false);
+  const [deletedSupplierName, setDeletedSupplierName] = useState(null);
   const { currentOrders } = useOrder();
 
   const handleEditClick = (supplier) => {
@@ -56,6 +57,19 @@ function Suppliers() {
     setIsCreatingNewSupplier(false);
   };
 
+  const handleDeleteSupplier = (supplierId) => {
+    const supplierToDelete = suppliers.find((s) => s.id === supplierId);
+    setSuppliers((prevSuppliers) =>
+      prevSuppliers.filter((s) => s.id !== supplierId)
+    );
+    setEditingSupplier(null);
+    setDeletedSupplierName(suppliertoDelete.name);
+  };
+
+  const handleCloseDeletedMessage = () => {
+    setDeletedSupplierName(null);
+  };
+
   return (
     <div className={styles.supplierContainer}>
       <SearchSuppliers />
@@ -70,6 +84,7 @@ function Suppliers() {
           supplier={editingSupplier}
           onClose={handleCloseEdit}
           onSave={handleSaveEdit}
+          onDelete={handleDeleteSupplier}
         />
       )}
       {viewingOrdersSupplier && (
@@ -84,6 +99,19 @@ function Suppliers() {
           onClose={handleCloseNewSupplierForm}
           onSave={handleSaveNewSupplier}
         />
+      )}
+      {deletedSupplierName && (
+        <div className={styles.deletedMessageOverlay}>
+          <div className={styles.deletedMessageBox}>
+            <p>{deletedSupplierName} has been deleted.</p>
+            <button
+              onClick={handleCloseDeletedMessage}
+              className={styles.closeButton}
+            >
+              Close
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

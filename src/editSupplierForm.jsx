@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import styles from "./styles/editSupplierForm.module.css";
 
-function EditSupplierForm({ supplier, onClose, onSave }) {
+function EditSupplierForm({ supplier, onClose, onSave, onDelete }) {
   const [editedSupplier, setEditedSupplier] = useState(supplier);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -12,6 +13,14 @@ function EditSupplierForm({ supplier, onClose, onSave }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave(editedSupplier);
+  };
+
+  const handleDeleteClick = () => {
+    setShowDeleteConfirmation(true);
+  };
+
+  const handleConfirmDelete = () => {
+    onDelete(supplier.id);
   };
 
   return (
@@ -70,9 +79,40 @@ function EditSupplierForm({ supplier, onClose, onSave }) {
             >
               Cancel
             </button>
+            <button
+              type="button"
+              onClick={handleDeleteClick}
+              className={styles.deleteButton}
+            >
+              Delete Supplier
+            </button>
           </div>
         </form>
       </div>
+      {showDeleteConfirmation && (
+        <div className={styles.confirmationOverlay}>
+          <div className={styles.confirmationBox}>
+            <p>
+              Are you sure you would like to delete {supplier.name}? This is
+              irreversible.
+            </p>
+            <div className={styles.confirmationActions}>
+              <button
+                onClick={handleConfirmDelete}
+                className={styles.confirmDeleteButton}
+              >
+                Yes, delete {supplier.name}
+              </button>
+              <button
+                onClick={() => setShowDeleteConfirmation(false)}
+                className={styles.cancelButton}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
