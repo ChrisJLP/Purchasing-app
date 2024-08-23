@@ -4,6 +4,7 @@ import { suppliersData } from "./data/suppliersData";
 import EditSupplierForm from "./editSupplierForm";
 import SupplierOrdersView from "./SuppliersOrdersView";
 import NewSupplierForm from "./NewSupplierForm";
+import SupplierDetailsPopup from "./SupplierDetailsPopup";
 import { useOrder } from "./OrderContext";
 import { useSupplier } from "./SupplierContext";
 
@@ -14,6 +15,7 @@ function Suppliers() {
   const [viewingOrdersSupplier, setViewingOrdersSupplier] = useState(null);
   const [isCreatingNewSupplier, setIsCreatingNewSupplier] = useState(false);
   const [deletedSupplierName, setDeletedSupplierName] = useState(null);
+  const [selectedSupplier, setSelectedSupplier] = useState(null);
   const { currentOrders } = useOrder();
 
   const handleEditClick = (supplier) => {
@@ -41,6 +43,14 @@ function Suppliers() {
     setIsCreatingNewSupplier(true);
   };
 
+  const handleSupplierClick = (supplier) => {
+    setSelectedSupplier(supplier);
+  };
+
+  const handleClosePopup = () => {
+    setSelectedSupplier(null);
+  };
+
   const handleCloseNewSupplierForm = () => {
     setIsCreatingNewSupplier(false);
   };
@@ -63,7 +73,7 @@ function Suppliers() {
 
   return (
     <div className={styles.supplierContainer}>
-      <SearchSuppliers />
+      <SearchSuppliers onSupplierClick={handleSupplierClick} />
       <CurrentSupplier
         suppliers={suppliers}
         onEditClick={handleEditClick}
@@ -104,6 +114,14 @@ function Suppliers() {
           </div>
         </div>
       )}
+      {selectedSupplier && (
+        <SupplierDetailsPopup
+          supplier={selectedSupplier}
+          onClose={handleClosePopup}
+          onEdit={handleEditClick}
+          onViewOrders={handleViewOrdersClick}
+        />
+      )}
     </div>
   );
 }
@@ -135,7 +153,7 @@ function CurrentSupplier({ suppliers, onEditClick, onViewOrdersClick }) {
   );
 }
 
-function SearchSuppliers() {
+function SearchSuppliers({ onSupplierClick }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
@@ -168,6 +186,12 @@ function SearchSuppliers() {
     }
   };
 
+  const handleSuggestionClick = (supplier) => {
+    setSearchTerm(supplier.name);
+    setSuggestions([]);
+    onSupplierClick(supplier);
+  };
+
   return (
     <div className={styles.searchSuppliersContainer}>
       <h2>Search Suppliers</h2>
@@ -182,7 +206,21 @@ function SearchSuppliers() {
           {suggestions.length > 0 && (
             <ul className={styles.suggestions}>
               {suggestions.map((supplier) => (
-                <li key={supplier.id}>{supplier.name}</li>
+                <li
+                  key={supplier.id}
+                  onClick={() => handleSuggestionClick(supplier)}
+                >
+                  {supplier.name}
+                </li>
+              ))}
+            </ul>
+          )}
+          {searchResults.length > 0 && (
+            <ul className={styles.searchResults}>
+              {searchResults.map((supplier) => (
+                <li key={supplier.id} onClick={() => onSupplierClick(supplier)}>
+                  {supplier.name}
+                </li>
               ))}
             </ul>
           )}
