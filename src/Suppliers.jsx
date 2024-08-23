@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./styles/Suppliers.module.css";
 import { suppliersData } from "./data/suppliersData";
 import EditSupplierForm from "./editSupplierForm";
@@ -136,13 +136,66 @@ function CurrentSupplier({ suppliers, onEditClick, onViewOrdersClick }) {
 }
 
 function SearchSuppliers() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
+  const { getActiveSuppliers } = useSupplier();
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+
+    if (value.length >= 2) {
+      const suggestionResults = getActiveSuppliers().filter((supplier) =>
+        supplier.name.toLowerCase().includes(value.toLowerCase())
+      );
+      setSuggestions(suggestionResults);
+    } else {
+      setSuggestions([]);
+    }
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchTerm.length >= 2) {
+      const results = getActiveSuppliers().filter((supplier) =>
+        supplier.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setSearchResults(results);
+      setSuggestions([]);
+    } else {
+      setSearchResults([]);
+    }
+  };
+
   return (
     <div className={styles.searchSuppliersContainer}>
       <h2>Search Suppliers</h2>
-      <div className={styles.search}>
-        <input type="text" />
-        <input type="submit" />
-      </div>
+      <form onSubmit={handleSearch} className={styles.search}>
+        <div className={styles.searchInputContainer}>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            placeholder="Search suppliers..."
+          />
+          {suggestions.length > 0 && (
+            <ul className={styles.suggestions}>
+              {suggestions.map((supplier) => (
+                <li key={supplier.id}>{supplier.name}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <input type="submit" value="Search" />
+      </form>
+      {searchResults.length > 0 && (
+        <ul className={styles.searchResults}>
+          {searchResults.map((supplier) => (
+            <li key={supplier.id}>{supplier.name}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
