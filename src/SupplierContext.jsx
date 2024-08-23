@@ -5,6 +5,7 @@ const SupplierContext = createContext();
 
 export function SupplierProvider({ children }) {
   const [suppliers, setSuppliers] = useState(suppliersData);
+  const [deletedSupplierIds, setDeletedSupplierIds] = useState([]);
 
   const addSupplier = (newSupplier) => {
     const newSupplierId = Math.max(...suppliers.map((s) => s.id)) + 1;
@@ -27,11 +28,24 @@ export function SupplierProvider({ children }) {
     setSuppliers((prevSuppliers) =>
       prevSuppliers.filter((s) => s.id !== supplierId)
     );
+    setDeletedSupplierIds((prevIds) => [...prevIds, supplierId]);
+  };
+
+  const getActiveSuppliers = () => {
+    return suppliers.filter(
+      (supplier) => !deletedSupplierIds.includes(supplier.id)
+    );
   };
 
   return (
     <SupplierContext.Provider
-      value={{ suppliers, addSupplier, updateSupplier, deleteSupplier }}
+      value={{
+        suppliers,
+        addSupplier,
+        updateSupplier,
+        deleteSupplier,
+        getActiveSuppliers,
+      }}
     >
       {children}
     </SupplierContext.Provider>

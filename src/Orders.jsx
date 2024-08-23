@@ -4,6 +4,7 @@ import styles from "./styles/Orders.module.css";
 import StockNeeded from "./StockNeeded";
 import { useInventory } from "./InventoryContext";
 import { useOrder } from "./OrderContext";
+import { useSupplier } from "./SupplierContext";
 import { suppliersData } from "./data/suppliersData";
 import OrderDetailsPopup from "./OrderDetailsPopup";
 
@@ -22,8 +23,8 @@ function Orders() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState(null);
-
   const location = useLocation();
+  const { getActiveSuppliers } = useSupplier();
 
   useEffect(
     () => {
@@ -74,6 +75,7 @@ function Orders() {
             setSelectedSupplier={setSelectedSupplier}
             orderLines={orderLines}
             setOrderLines={setOrderLines}
+            activeSuppliers={getActiveSuppliers()}
           />
         )}
       </div>
@@ -146,7 +148,7 @@ function NewOrderButton({ onClick }) {
   );
 }
 
-function OrderForm({ onClose }) {
+function OrderForm({ onClose, activeSuppliers }) {
   const { inventoryItems } = useInventory();
   const {
     selectedSupplier,
@@ -159,6 +161,18 @@ function OrderForm({ onClose }) {
   } = useOrder();
   const [errorMessage, setErrorMessage] = useState("");
 
+  useEffect(() => {
+    if (
+      selectedSupplier &&
+      !activeSuppliers.some((s) => s.id === selectedSupplier.id)
+    ) {
+      setSelectedSupplier(null);
+      setOrderLines([]);
+      setErrorMessage(
+        "The previously selected supplier is no longer available."
+      );
+    }
+  }, [selectedSupplier, activeSuppliers, setSelectedSupplier, setOrderLines]);
   useEffect(() => {
     if (selectedSupplier && orderLines.length === 0) {
       setOrderLines([
@@ -252,7 +266,7 @@ function OrderForm({ onClose }) {
 
   const validateOrder = () => {
     if (!selectedSupplier) {
-      return "Please select a supplier.";
+      return "Please select an active supplier.";
     }
     if (!deliveryDate) {
       return "Please select a delivery date.";
@@ -305,10 +319,15 @@ function OrderForm({ onClose }) {
               id="supplier"
               className={styles.select}
               onChange={handleSupplierChange}
-              value={selectedSupplier ? selectedSupplier.id : ""}
+              value={
+                selectedSupplier &&
+                activeSuppliers.some((s) => s.id === selectedSupplier.id)
+                  ? selectedSupplier.id
+                  : ""
+              }
             >
               <option value="">Select a supplier</option>
-              {suppliersData.map((supplier) => (
+              {activeSuppliers.map((supplier) => (
                 <option
                   key={supplier.id}
                   value={supplier.id}
