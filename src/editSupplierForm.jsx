@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import styles from "./styles/editSupplierForm.module.css";
+import { useOrder } from "./OrderContext";
 
 function EditSupplierForm({ supplier, onClose, onSave, onDelete }) {
   const [editedSupplier, setEditedSupplier] = useState(supplier);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const { hasCurrentOrders } = useOrder();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,7 +19,11 @@ function EditSupplierForm({ supplier, onClose, onSave, onDelete }) {
   };
 
   const handleDeleteClick = () => {
-    setShowDeleteConfirmation(true);
+    if (hasCurrentOrders(supplier.id)) {
+      setErrorMessage("Cannot delete a supplier that has open orders.");
+    } else {
+      setShowDeleteConfirmation(true);
+    }
   };
 
   const handleConfirmDelete = () => {
@@ -87,6 +94,9 @@ function EditSupplierForm({ supplier, onClose, onSave, onDelete }) {
               Delete Supplier
             </button>
           </div>
+          {errorMessage && (
+            <div className={styles.errorMessage}>{errorMessage}</div>
+          )}
         </form>
       </div>
       {showDeleteConfirmation && (

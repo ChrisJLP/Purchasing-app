@@ -32,6 +32,10 @@ export function OrderProvider({ children }) {
     setDeliveryDate("");
   };
 
+  const hasCurrentOrders = (supplierId) => {
+    return currentOrders.some((order) => order.supplier.id === supplierId);
+  };
+
   return (
     <OrderContext.Provider
       value={{
@@ -45,6 +49,7 @@ export function OrderProvider({ children }) {
         setOrderLines,
         currentOrders,
         placeOrder,
+        hasCurrentOrders,
       }}
     >
       {children}

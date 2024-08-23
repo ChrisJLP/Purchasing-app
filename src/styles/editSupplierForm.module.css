@@ -123,3 +123,14 @@
   .confirmDeleteButton:hover {
     background-color: #c82333;
   }
+
+  .errorMessage {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+    border: 1px solid #f5c6cb;
+  }
