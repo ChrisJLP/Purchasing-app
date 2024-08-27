@@ -94,7 +94,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1100;
+    z-index: 1200;
   }
   
   .confirmationBox {
@@ -102,6 +102,8 @@
     padding: 20px;
     border-radius: 10px;
     text-align: center;
+    z-index: 1201;
+    position: relative;
   }
   
   .confirmationActions {
