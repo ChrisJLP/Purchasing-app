@@ -20,6 +20,9 @@ function Orders() {
     setOrderLines,
     currentOrders,
     setDeliveryDate,
+    isOrderInProgress,
+    setIsOrderInProgress,
+    resetOrderState,
   } = useOrder();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -28,22 +31,22 @@ function Orders() {
   const { getActiveSuppliers } = useSupplier();
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [quickOrderData, setQuickOrderData] = useState(null);
-  const [isOrderInProgress, setIsOrderInProgress] = useState(false);
   const [showResetConfirmation, setShowResetConfirmation] = useState(false);
 
-  useEffect(
-    () => {
-      recalculateStockNeeded();
-      setIsLoading(false);
+  useEffect(() => {
+    recalculateStockNeeded();
+    setIsLoading(false);
 
-      if (location.state && location.state.openOrderForm) {
-        setShowForm(true);
-      }
-    },
-    [recalculateStockNeeded],
+    if (location.state && location.state.openOrderForm) {
+      setShowForm(true);
+      setIsOrderInProgress(true);
+    }
+  }, [
+    recalculateStockNeeded,
     location.state,
-    setShowForm
-  );
+    setShowForm,
+    setIsOrderInProgress,
+  ]);
 
   const handleQuickOrder = (supplierName, items) => {
     const supplier = getActiveSuppliers().find((s) => s.name === supplierName);
@@ -111,7 +114,7 @@ function Orders() {
           line.quantity !== "" ||
           line.price !== ""
       );
-    setIsOrderInProgress(hasExistingOrder);
+    setIsOrderInProgress(false);
   };
 
   const handleResetOrder = () => {
@@ -119,12 +122,7 @@ function Orders() {
   };
 
   const confirmResetOrder = () => {
-    setSelectedSupplier(null);
-    setOrderLines([
-      { itemId: "", itemName: "", quantity: "", price: "", basePrice: "" },
-    ]);
-    setDeliveryDate("");
-    setIsOrderInProgress(false);
+    resetOrderState();
     setShowResetConfirmation(false);
   };
 
@@ -165,6 +163,7 @@ function Orders() {
             setOrderLines={setOrderLines}
             activeSuppliers={getActiveSuppliers()}
             onResetOrder={handleResetOrder}
+            setIsOrderInProgress={setIsOrderInProgress}
           />
         )}
       </div>
@@ -266,24 +265,12 @@ function OrderForm({
   orderLines,
   setOrderLines,
   onResetOrder,
+  setIsOrderInProgress,
 }) {
   const { inventoryItems } = useInventory();
   const { deliveryDate, setDeliveryDate, placeOrder } = useOrder();
   const [errorMessage, setErrorMessage] = useState("");
   const [hasBeenPopulated, setHasBeenPopulated] = useState(false);
-
-  useEffect(() => {
-    if (
-      selectedSupplier &&
-      !activeSuppliers.some((s) => s.id === selectedSupplier.id)
-    ) {
-      setSelectedSupplier(null);
-      setOrderLines([]);
-      setErrorMessage(
-        "The previously selected supplier is no longer available."
-      );
-    }
-  }, [selectedSupplier, activeSuppliers, setSelectedSupplier, setOrderLines]);
 
   useEffect(() => {
     if (selectedSupplier && orderLines.length === 0) {
@@ -311,7 +298,7 @@ function OrderForm({
 
   const handleSupplierChange = (e) => {
     const supplierId = parseInt(e.target.value, 10);
-    const supplier = suppliersData.find((s) => s.id === supplierId);
+    const supplier = activeSuppliers.find((s) => s.id === supplierId);
     setSelectedSupplier(supplier);
     setOrderLines([]);
   };
@@ -420,6 +407,7 @@ function OrderForm({
         date: new Date().toISOString(),
       };
       placeOrder(order);
+      setIsOrderInProgress(false);
       onClose();
     }
   };

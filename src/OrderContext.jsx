@@ -10,6 +10,7 @@ export function OrderProvider({ children }) {
   const [deliveryDate, setDeliveryDate] = useState("");
   const [currentOrders, setCurrentOrders] = useState([]);
   const [lastOrderNumber, setLastOrderNumber] = useState(0);
+  const [isOrderInProgress, setIsOrderInProgress] = useState(false);
   const { updateStockNeeded } = useInventory();
 
   const getNextOrderNumber = () => {
@@ -26,10 +27,15 @@ export function OrderProvider({ children }) {
     };
     setCurrentOrders((prevOrders) => [...prevOrders, newOrder]);
     updateStockNeeded(newOrder);
+    resetOrderState();
+  };
+
+  const resetOrderState = () => {
     setShowForm(false);
     setOrderLines([]);
     setSelectedSupplier(null);
     setDeliveryDate("");
+    setIsOrderInProgress(false);
   };
 
   const hasCurrentOrders = (supplierId) => {
@@ -50,6 +56,9 @@ export function OrderProvider({ children }) {
         currentOrders,
         placeOrder,
         hasCurrentOrders,
+        isOrderInProgress,
+        setIsOrderInProgress,
+        resetOrderState,
       }}
     >
       {children}
