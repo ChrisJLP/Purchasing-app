@@ -25,6 +25,8 @@ function Orders() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const location = useLocation();
   const { getActiveSuppliers } = useSupplier();
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [quickOrderData, setQuickOrderData] = useState(null);
 
   useEffect(
     () => {
@@ -39,6 +41,46 @@ function Orders() {
     location.state,
     setShowForm
   );
+
+  const handleQuickOrder = (supplierName, items) => {
+    const supplier = getActiveSuppliers().find((s) => s.name === supplierName);
+    const newOrderLines = items.map((item) => {
+      const fullItem = inventoryItems.find((invItem) => invItem.id === item.id);
+      const supplierInfo = fullItem.suppliers.find((s) => s.id === supplier.id);
+      const supplierPrice = supplierInfo ? parseFloat(supplierInfo.price) : 0;
+      return {
+        itemId: item.id,
+        itemName: item.name,
+        quantity: item.quantity,
+        price: (supplierPrice * item.quantity).toFixed(2),
+        basePrice: supplierPrice.toFixed(2),
+      };
+    });
+
+    if (showForm && orderLines.length > 0) {
+      setShowConfirmation(true);
+      setQuickOrderData({ supplier, orderLines: newOrderLines });
+    } else {
+      applyQuickOrder({ supplier, orderLines: newOrderLines });
+    }
+  };
+
+  const applyQuickOrder = (data) => {
+    setSelectedSupplier(data.supplier);
+    setOrderLines(data.orderLines);
+    setShowForm(true);
+    setShowConfirmation(false);
+    setQuickOrderData(null);
+  };
+
+  const handleConfirmQuickOrder = () => {
+    applyQuickOrder(quickOrderData);
+  };
+
+  const handleCancelQuickOrder = () => {
+    setShowConfirmation(false);
+    setQuickOrderData(null);
+  };
 
   const handleNewOrderClick = () => {
     setShowForm(!showForm);
@@ -65,6 +107,7 @@ function Orders() {
           isClickable={true}
           showOrderButton={false}
           isOrdersPage={true}
+          onQuickOrder={handleQuickOrder}
         />
         <CurrentOrders orders={currentOrders} onOrderClick={onOrderClick} />
         <NewOrderButton onClick={handleNewOrderClick} />
@@ -84,6 +127,15 @@ function Orders() {
           order={selectedOrder}
           onClose={() => setSelectedOrder(null)}
         />
+      )}
+      {showConfirmation && (
+        <div className={styles.confirmationOverlay}>
+          <div className={styles.confirmationBox}>
+            <p>This will override your current order. Are you sure?</p>
+            <button onClick={handleConfirmQuickOrder}>Yes, proceed</button>
+            <button onClick={handleCancelQuickOrder}>Cancel</button>
+          </div>
+        </div>
       )}
     </>
   );
@@ -148,17 +200,16 @@ function NewOrderButton({ onClick }) {
   );
 }
 
-function OrderForm({ onClose, activeSuppliers }) {
+function OrderForm({
+  onClose,
+  activeSuppliers,
+  selectedSupplier,
+  setSelectedSupplier,
+  orderLines,
+  setOrderLines,
+}) {
   const { inventoryItems } = useInventory();
-  const {
-    selectedSupplier,
-    setSelectedSupplier,
-    orderLines,
-    setOrderLines,
-    deliveryDate,
-    setDeliveryDate,
-    placeOrder,
-  } = useOrder();
+  const { deliveryDate, setDeliveryDate, placeOrder } = useOrder();
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
@@ -173,6 +224,7 @@ function OrderForm({ onClose, activeSuppliers }) {
       );
     }
   }, [selectedSupplier, activeSuppliers, setSelectedSupplier, setOrderLines]);
+
   useEffect(() => {
     if (selectedSupplier && orderLines.length === 0) {
       setOrderLines([

@@ -9,6 +9,7 @@ function StockNeeded({
   isClickable = false,
   showOrderButton = true,
   isOrdersPage = false,
+  onQuickOrder,
 }) {
   const [selectedItem, setSelectedItem] = useState(null);
 
@@ -71,6 +72,12 @@ function StockNeeded({
                 </li>
               ))}
             </ul>
+            <button
+              onClick={() => onQuickOrder(supplierName, items)}
+              className={styles.quickOrderButton}
+            >
+              Quick Order
+            </button>
           </div>
         ))
       ) : (
@@ -93,7 +100,7 @@ function StockNeeded({
           ))}
         </ul>
       )}
-      {showOrderButton && (
+      {showOrderButton && !isOrdersPage && (
         <button className={styles.button}>
           <Link to="/orders" className={styles.navLink}>
             Go to orders
