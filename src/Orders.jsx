@@ -57,7 +57,17 @@ function Orders() {
       };
     });
 
-    if (showForm && orderLines.length > 0) {
+    const hasExistingOrder =
+      selectedSupplier ||
+      orderLines.some(
+        (line) =>
+          line.itemId !== "" ||
+          line.itemName !== "" ||
+          line.quantity !== "" ||
+          line.price !== ""
+      );
+
+    if (hasExistingOrder) {
       setShowConfirmation(true);
       setQuickOrderData({ supplier, orderLines: newOrderLines });
     } else {
