@@ -19,7 +19,9 @@ export function SupplierProvider({ children }) {
   const updateSupplier = (updatedSupplier) => {
     setSuppliers((prevSuppliers) =>
       prevSuppliers.map((supplier) =>
-        supplier.id === updatedSupplier.id ? updatedSupplier : supplier
+        supplier.id === updatedSupplier.id
+          ? { ...supplier, ...updatedSupplier }
+          : supplier
       )
     );
   };

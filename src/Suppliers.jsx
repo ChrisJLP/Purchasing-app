@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styles from "./styles/Suppliers.module.css";
-import { suppliersData } from "./data/suppliersData";
 import EditSupplierForm from "./editSupplierForm";
 import SupplierOrdersView from "./SuppliersOrdersView";
 import NewSupplierForm from "./NewSupplierForm";
@@ -29,6 +28,7 @@ function Suppliers() {
   const handleSaveEdit = (editedSupplier) => {
     updateSupplier(editedSupplier);
     setEditingSupplier(null);
+    setSelectedSupplier(editedSupplier);
   };
 
   const handleViewOrdersClick = (supplier) => {
