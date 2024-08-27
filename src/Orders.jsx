@@ -19,6 +19,7 @@ function Orders() {
     orderLines,
     setOrderLines,
     currentOrders,
+    setDeliveryDate,
   } = useOrder();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -27,6 +28,8 @@ function Orders() {
   const { getActiveSuppliers } = useSupplier();
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [quickOrderData, setQuickOrderData] = useState(null);
+  const [isOrderInProgress, setIsOrderInProgress] = useState(false);
+  const [showResetConfirmation, setShowResetConfirmation] = useState(false);
 
   useEffect(
     () => {
@@ -93,11 +96,40 @@ function Orders() {
   };
 
   const handleNewOrderClick = () => {
-    setShowForm(!showForm);
+    setShowForm(true);
+    setIsOrderInProgress(true);
   };
 
   const handleCloseForm = () => {
     setShowForm(false);
+    const hasExistingOrder =
+      selectedSupplier ||
+      orderLines.some(
+        (line) =>
+          line.itemId !== "" ||
+          line.itemName !== "" ||
+          line.quantity !== "" ||
+          line.price !== ""
+      );
+    setIsOrderInProgress(hasExistingOrder);
+  };
+
+  const handleResetOrder = () => {
+    setShowResetConfirmation(true);
+  };
+
+  const confirmResetOrder = () => {
+    setSelectedSupplier(null);
+    setOrderLines([
+      { itemId: "", itemName: "", quantity: "", price: "", basePrice: "" },
+    ]);
+    setDeliveryDate("");
+    setIsOrderInProgress(false);
+    setShowResetConfirmation(false);
+  };
+
+  const cancelResetOrder = () => {
+    setShowResetConfirmation(false);
   };
 
   const onOrderClick = (order) => {
@@ -120,7 +152,10 @@ function Orders() {
           onQuickOrder={handleQuickOrder}
         />
         <CurrentOrders orders={currentOrders} onOrderClick={onOrderClick} />
-        <NewOrderButton onClick={handleNewOrderClick} />
+        <NewOrderButton
+          onClick={handleNewOrderClick}
+          isOrderInProgress={isOrderInProgress}
+        />
         {showForm && (
           <OrderForm
             onClose={handleCloseForm}
@@ -129,6 +164,7 @@ function Orders() {
             orderLines={orderLines}
             setOrderLines={setOrderLines}
             activeSuppliers={getActiveSuppliers()}
+            onResetOrder={handleResetOrder}
           />
         )}
       </div>
@@ -144,6 +180,18 @@ function Orders() {
             <p>This will override your current order. Are you sure?</p>
             <button onClick={handleConfirmQuickOrder}>Yes, proceed</button>
             <button onClick={handleCancelQuickOrder}>Cancel</button>
+          </div>
+        </div>
+      )}
+      {showResetConfirmation && (
+        <div className={styles.confirmationOverlay}>
+          <div className={styles.confirmationBox}>
+            <p>
+              Are you sure you want to reset the current order? This will clear
+              all entered data.
+            </p>
+            <button onClick={confirmResetOrder}>Yes, reset order</button>
+            <button onClick={cancelResetOrder}>Cancel</button>
           </div>
         </div>
       )}
@@ -202,10 +250,10 @@ function CurrentOrders({ orders, onOrderClick }) {
   );
 }
 
-function NewOrderButton({ onClick }) {
+function NewOrderButton({ onClick, isOrderInProgress }) {
   return (
     <button className={styles.newOrderButton} onClick={onClick}>
-      Place a new order
+      {isOrderInProgress ? "Reopen order" : "Place a new order"}
     </button>
   );
 }
@@ -217,10 +265,12 @@ function OrderForm({
   setSelectedSupplier,
   orderLines,
   setOrderLines,
+  onResetOrder,
 }) {
   const { inventoryItems } = useInventory();
   const { deliveryDate, setDeliveryDate, placeOrder } = useOrder();
   const [errorMessage, setErrorMessage] = useState("");
+  const [hasBeenPopulated, setHasBeenPopulated] = useState(false);
 
   useEffect(() => {
     if (
@@ -242,6 +292,18 @@ function OrderForm({
       ]);
     }
   }, [selectedSupplier, orderLines.length, setOrderLines]);
+
+  useEffect(() => {
+    if (selectedSupplier || orderLines.length > 0) {
+      setHasBeenPopulated(true);
+    }
+  }, [selectedSupplier, orderLines]);
+
+  useEffect(() => {
+    if (hasBeenPopulated && !selectedSupplier && orderLines.length === 0) {
+      onClose();
+    }
+  }, [selectedSupplier, orderLines, onClose, hasBeenPopulated]);
 
   const handleDeliveryDateChange = (e) => {
     setDeliveryDate(e.target.value);
@@ -477,13 +539,19 @@ function OrderForm({
               className={styles.dateInput}
             />
           </div>
-          <div className={styles.formGroup}>
+          <div className={styles.formActions}>
             <button type="submit" className={styles.placeOrderButton}>
               Place Order
             </button>
-          </div>
-          <div className={styles.closeFormButtonContainer}>
             <button
+              type="button"
+              className={styles.resetOrderButton}
+              onClick={onResetOrder}
+            >
+              Reset Order
+            </button>
+            <button
+              type="button"
               className={styles.closeFormButton}
               onClick={handleCloseClick}
             >

@@ -338,3 +338,27 @@ span {
     background-color: #f44336;
     color: white;
   }
+
+  .resetOrderButton {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .resetOrderButton:hover {
+    background-color: #d32f2f;
+  }
+  
+  .formActions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
