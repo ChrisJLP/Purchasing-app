@@ -2,28 +2,44 @@ import React, { useState } from "react";
 import styles from "./styles/Inventory.module.css";
 import { useInventory } from "./InventoryContext";
 import StockNeeded from "./StockNeeded";
+import StockItemPopup from "./StockItemPopup";
 
 function Inventory() {
   const { inventoryItems, stockNeededItems, isInitialized } = useInventory();
+  const [selectedItem, setSelectedItem] = useState(null);
 
   if (!isInitialized) {
     return <div>Loading...</div>;
   }
 
+  const handleItemClick = (item) => {
+    setSelectedItem(item);
+  };
+
+  const handleClosePopup = () => {
+    setSelectedItem(null);
+  };
+
   return (
     <div className={styles.inventoryContainer}>
-      <CurrentStock inventoryItems={inventoryItems} />
+      <CurrentStock
+        inventoryItems={inventoryItems}
+        onItemClick={handleItemClick}
+      />
       <StockNeeded
         stockNeededItems={stockNeededItems}
         inventoryItems={inventoryItems}
         isClickable={false}
         showOrderButton={true}
       />
+      {selectedItem && (
+        <StockItemPopup item={selectedItem} onClose={handleClosePopup} />
+      )}
     </div>
   );
 }
 
-function CurrentStock({ inventoryItems }) {
+function CurrentStock({ inventoryItems, onItemClick }) {
   const [editIndex, setEditIndex] = useState(null);
   const [editedStock, setEditedStock] = useState("");
   const [editedMinStock, setEditedMinStock] = useState("");
@@ -56,7 +72,14 @@ function CurrentStock({ inventoryItems }) {
         <tbody>
           {inventoryItems.map((item, index) => (
             <tr key={index} className={styles.tableRow}>
-              <td>{item.name}</td>
+              <td>
+                <button
+                  className={styles.itemNameButton}
+                  onClick={() => onItemClick(item)}
+                >
+                  {item.name}
+                </button>
+              </td>
               <td>
                 {editIndex === index ? (
                   <input
