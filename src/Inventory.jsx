@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import styles from "./styles/Inventory.module.css";
 import { useInventory } from "./InventoryContext";
+import { useOrder } from "./OrderContext";
 import StockNeeded from "./StockNeeded";
 import StockItemPopup from "./StockItemPopup";
+import CurrentOrdersPopup from "./CurrentOrdersPopup";
+import OrderDetailsPopup from "./OrderDetailsPopup";
 
 function Inventory() {
   const { inventoryItems, stockNeededItems, isInitialized } = useInventory();
+  const { currentOrders } = useOrder();
   const [selectedItem, setSelectedItem] = useState(null);
+  const [showCurrentOrders, setShowCurrentOrders] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   if (!isInitialized) {
     return <div>Loading...</div>;
@@ -19,6 +25,28 @@ function Inventory() {
   const handleClosePopup = () => {
     setSelectedItem(null);
   };
+
+  const handleViewOrders = () => {
+    setShowCurrentOrders(true);
+  };
+
+  const handleCloseOrders = () => {
+    setShowCurrentOrders(false);
+  };
+
+  const handleViewOrderDetails = (order) => {
+    setSelectedOrder(order);
+    setShowCurrentOrders(false);
+  };
+
+  const handleCloseOrderDetails = () => {
+    setSelectedOrder(null);
+    setShowCurrentOrders(true);
+  };
+
+  const itemOrders = currentOrders.filter((order) =>
+    order.lines.some((line) => line.itemId === selectedItem?.id)
+  );
 
   return (
     <div className={styles.inventoryContainer}>
@@ -33,12 +61,30 @@ function Inventory() {
         showOrderButton={true}
       />
       {selectedItem && (
-        <StockItemPopup item={selectedItem} onClose={handleClosePopup} />
+        <StockItemPopup
+          item={selectedItem}
+          onClose={handleClosePopup}
+          onViewOrders={handleViewOrders}
+        />
+      )}
+      {showCurrentOrders && (
+        <CurrentOrdersPopup
+          orders={itemOrders}
+          itemName={selectedItem.name}
+          onClose={handleCloseOrders}
+          onViewOrderDetails={handleViewOrderDetails}
+        />
+      )}
+      {selectedOrder && (
+        <OrderDetailsPopup
+          order={selectedOrder}
+          onClose={handleCloseOrderDetails}
+          highlightedItemId={selectedItem.id}
+        />
       )}
     </div>
   );
 }
-
 function CurrentStock({ inventoryItems, onItemClick }) {
   const [editIndex, setEditIndex] = useState(null);
   const [editedStock, setEditedStock] = useState("");

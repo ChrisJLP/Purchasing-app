@@ -46,3 +46,8 @@
   .closeButton:hover {
     background-color: #0056b3;
   }
+
+  .highlightedItem {
+    background-color: #fffacd;
+    font-weight: bold;
+  }

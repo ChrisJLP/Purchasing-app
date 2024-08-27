@@ -1,22 +1,42 @@
 import React from "react";
 import styles from "./styles/StockItemPopup.module.css";
 
-function StockItemPopup({ item, onClose }) {
+function StockItemPopup({ item, onClose, onViewOrders }) {
   return (
     <div className={styles.popupOverlay}>
       <div className={styles.popupContent}>
         <h2>{item.name}</h2>
-        <p>Stock: {item.stock}</p>
-        <p>On Order: {item.onOrder}</p>
-        <p>Minimum Stock: {item.minStock}</p>
+        <p>
+          <strong>Stock:</strong> {item.stock}
+        </p>
+        <p>
+          <strong>On Order:</strong> {item.onOrder}
+        </p>
+        <p>
+          <strong>Minimum Stock:</strong> {item.minStock}
+        </p>
         <h3>Suppliers:</h3>
-        <ul>
-          {item.suppliers.map((supplier, index) => (
-            <li key={index}>
-              {supplier.name}: £{supplier.price}
-            </li>
-          ))}
-        </ul>
+        <table className={styles.supplierTable}>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Price</th>
+              <th>Lead Time (days)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {item.suppliers.map((supplier, index) => (
+              <tr key={index}>
+                <td>{supplier.name}</td>
+                <td>£{supplier.price}</td>
+                <td>{supplier.leadTime}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <button onClick={onViewOrders} className={styles.viewOrdersButton}>
+          View Current Orders
+        </button>
         <button onClick={onClose} className={styles.closeButton}>
           Close
         </button>

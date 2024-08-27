@@ -1,11 +1,12 @@
 import React from "react";
 import styles from "./styles/OrderDetailsPopup.module.css";
 
-function OrderDetailsPopup({ order, onClose }) {
+function OrderDetailsPopup({ order, onClose, highlightedItemId }) {
   const formatDate = (dateString) => {
     const [year, month, day] = dateString.split("-");
     return `${day}/${month}/${year}`;
   };
+
   return (
     <div className={styles.orderDetailsContainer}>
       <h2>Purchase order {order.orderNumber}</h2>
@@ -21,7 +22,14 @@ function OrderDetailsPopup({ order, onClose }) {
       <h3>Items:</h3>
       <ul>
         {order.lines.map((line, index) => (
-          <li key={index}>
+          <li
+            key={index}
+            className={
+              parseInt(line.itemId) === highlightedItemId
+                ? styles.highlightedItem
+                : ""
+            }
+          >
             {line.quantity}x {line.itemName} - £{line.price}
           </li>
         ))}
