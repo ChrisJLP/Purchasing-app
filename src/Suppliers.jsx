@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import styles from "./styles/Suppliers.module.css";
 import EditSupplierForm from "./editSupplierForm";
 import SupplierOrdersView from "./SuppliersOrdersView";
@@ -16,6 +17,14 @@ function Suppliers() {
   const [deletedSupplierName, setDeletedSupplierName] = useState(null);
   const [selectedSupplier, setSelectedSupplier] = useState(null);
   const { currentOrders } = useOrder();
+  const location = useLocation();
+  const searchInputRef = useRef(null);
+
+  useEffect(() => {
+    if (location.state?.focusSearch && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [location]);
 
   const handleEditClick = (supplier) => {
     setEditingSupplier(supplier);
@@ -73,7 +82,10 @@ function Suppliers() {
 
   return (
     <div className={styles.supplierContainer}>
-      <SearchSuppliers onSupplierClick={handleSupplierClick} />
+      <SearchSuppliers
+        onSupplierClick={handleSupplierClick}
+        ref={searchInputRef}
+      />
       <CurrentSupplier
         suppliers={suppliers}
         onEditClick={handleEditClick}
@@ -153,7 +165,7 @@ function CurrentSupplier({ suppliers, onEditClick, onViewOrdersClick }) {
   );
 }
 
-function SearchSuppliers({ onSupplierClick }) {
+const SearchSuppliers = React.forwardRef(({ onSupplierClick }, ref) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
@@ -202,6 +214,7 @@ function SearchSuppliers({ onSupplierClick }) {
             value={searchTerm}
             onChange={handleSearchChange}
             placeholder="Search suppliers..."
+            ref={ref}
           />
           {suggestions.length > 0 && (
             <ul className={styles.suggestions}>
@@ -236,7 +249,7 @@ function SearchSuppliers({ onSupplierClick }) {
       )}
     </div>
   );
-}
+});
 
 function NewSupplierButton({ onClick }) {
   return (

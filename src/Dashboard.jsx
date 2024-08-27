@@ -81,7 +81,11 @@ function QuickLinks() {
             Create Order
           </Link>
         </li>
-        <li className={styles.quickLink}>Search Supplier</li>
+        <li className={styles.quickLink}>
+          <Link to="/suppliers" state={{ focusSearch: true }}>
+            Search Supplier
+          </Link>
+        </li>
         <li className={styles.quickLink}>Create Item</li>
         <li className={styles.quickLink}>Create Supplier</li>
       </ul>
