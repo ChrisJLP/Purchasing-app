@@ -45,7 +45,7 @@ function Inventory() {
   };
 
   const itemOrders = currentOrders.filter((order) =>
-    order.lines.some((line) => line.itemId === selectedItem?.id)
+    order.lines.some((line) => parseInt(line.itemId, 10) === selectedItem?.id)
   );
 
   return (

@@ -19,6 +19,7 @@ function Orders() {
     orderLines,
     setOrderLines,
     currentOrders,
+    deliveryDate,
     setDeliveryDate,
     isOrderInProgress,
     setIsOrderInProgress,
@@ -39,14 +40,14 @@ function Orders() {
 
     if (location.state && location.state.openOrderForm) {
       setShowForm(true);
-      setIsOrderInProgress(true);
     }
-  }, [
-    recalculateStockNeeded,
-    location.state,
-    setShowForm,
-    setIsOrderInProgress,
-  ]);
+  }, [recalculateStockNeeded, location.state, setShowForm]);
+
+  useEffect(() => {
+    const isDefault =
+      !selectedSupplier && orderLines.length === 0 && !deliveryDate;
+    setIsOrderInProgress(!isDefault);
+  }, [selectedSupplier, orderLines, deliveryDate, setIsOrderInProgress]);
 
   const handleQuickOrder = (supplierName, items) => {
     const supplier = getActiveSuppliers().find((s) => s.name === supplierName);
@@ -100,21 +101,10 @@ function Orders() {
 
   const handleNewOrderClick = () => {
     setShowForm(true);
-    setIsOrderInProgress(true);
   };
 
   const handleCloseForm = () => {
     setShowForm(false);
-    const hasExistingOrder =
-      selectedSupplier ||
-      orderLines.some(
-        (line) =>
-          line.itemId !== "" ||
-          line.itemName !== "" ||
-          line.quantity !== "" ||
-          line.price !== ""
-      );
-    setIsOrderInProgress(false);
   };
 
   const handleResetOrder = () => {
@@ -163,7 +153,6 @@ function Orders() {
             setOrderLines={setOrderLines}
             activeSuppliers={getActiveSuppliers()}
             onResetOrder={handleResetOrder}
-            setIsOrderInProgress={setIsOrderInProgress}
           />
         )}
       </div>
@@ -265,12 +254,10 @@ function OrderForm({
   orderLines,
   setOrderLines,
   onResetOrder,
-  setIsOrderInProgress,
 }) {
   const { inventoryItems } = useInventory();
   const { deliveryDate, setDeliveryDate, placeOrder } = useOrder();
   const [errorMessage, setErrorMessage] = useState("");
-  const [hasBeenPopulated, setHasBeenPopulated] = useState(false);
 
   useEffect(() => {
     if (selectedSupplier && orderLines.length === 0) {
@@ -279,18 +266,6 @@ function OrderForm({
       ]);
     }
   }, [selectedSupplier, orderLines.length, setOrderLines]);
-
-  useEffect(() => {
-    if (selectedSupplier || orderLines.length > 0) {
-      setHasBeenPopulated(true);
-    }
-  }, [selectedSupplier, orderLines]);
-
-  useEffect(() => {
-    if (hasBeenPopulated && !selectedSupplier && orderLines.length === 0) {
-      onClose();
-    }
-  }, [selectedSupplier, orderLines, onClose, hasBeenPopulated]);
 
   const handleDeliveryDateChange = (e) => {
     setDeliveryDate(e.target.value);
@@ -311,7 +286,7 @@ function OrderForm({
 
   const handleItemIdChange = (index, value) => {
     const updatedOrderLines = [...orderLines];
-    updatedOrderLines[index].itemId = value;
+    updatedOrderLines[index].itemId = parseInt(value, 10);
 
     if (
       selectedSupplier &&
@@ -400,14 +375,17 @@ function OrderForm({
     if (error) {
       setErrorMessage(error);
     } else {
+      const formattedOrderLines = orderLines.map((line) => ({
+        ...line,
+        itemId: parseInt(line.itemId, 10),
+      }));
       const order = {
         supplier: selectedSupplier,
-        lines: orderLines,
+        lines: formattedOrderLines,
         deliveryDate,
         date: new Date().toISOString(),
       };
       placeOrder(order);
-      setIsOrderInProgress(false);
       onClose();
     }
   };
