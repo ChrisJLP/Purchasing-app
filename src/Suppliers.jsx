@@ -24,6 +24,9 @@ function Suppliers() {
     if (location.state?.focusSearch && searchInputRef.current) {
       searchInputRef.current.focus();
     }
+    if (location.state?.openCreateForm) {
+      setIsCreatingNewSupplier(true);
+    }
   }, [location]);
 
   const handleEditClick = (supplier) => {

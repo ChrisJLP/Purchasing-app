@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./styles/Dashboard.module.css";
 import StockNeeded from "./StockNeeded";
 import { useInventory } from "./InventoryContext";
@@ -72,6 +72,16 @@ function SupplierOrders({ currentOrders }) {
 }
 
 function QuickLinks() {
+  const navigate = useNavigate();
+
+  const handleCreateItem = () => {
+    navigate("/inventory", { state: { openCreateForm: true } });
+  };
+
+  const handleCreateSupplier = () => {
+    navigate("/suppliers", { state: { openCreateForm: true } });
+  };
+
   return (
     <div className={styles.quickLinksContainer}>
       <h2>Quick Links</h2>
@@ -86,8 +96,12 @@ function QuickLinks() {
             Search Supplier
           </Link>
         </li>
-        <li className={styles.quickLink}>Create Item</li>
-        <li className={styles.quickLink}>Create Supplier</li>
+        <li className={styles.quickLink} onClick={handleCreateItem}>
+          Create Item
+        </li>
+        <li className={styles.quickLink} onClick={handleCreateSupplier}>
+          Create Supplier
+        </li>
       </ul>
     </div>
   );

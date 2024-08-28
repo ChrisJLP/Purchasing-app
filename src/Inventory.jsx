@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import styles from "./styles/Inventory.module.css";
 import { useInventory } from "./InventoryContext";
 import { useOrder } from "./OrderContext";
@@ -16,6 +17,13 @@ function Inventory() {
   const [showCurrentOrders, setShowCurrentOrders] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state && location.state.openCreateForm) {
+      setShowCreateForm(true);
+    }
+  }, [location]);
 
   if (!isInitialized) {
     return <div>Loading...</div>;
