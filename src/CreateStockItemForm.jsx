@@ -1,117 +1,55 @@
 import React, { useState } from "react";
 import { useSupplier } from "./SupplierContext";
 import styles from "./styles/CreateStockItemForm.module.css";
+import AddSupplierForm from "./AddSupplierForm";
+import StockItemSupplierDetailsPopup from "./StockItemSupplierDetailsPopup";
 
 function CreateStockItemForm({ onClose, onCreateItem }) {
   const [name, setName] = useState("");
   const [stock, setStock] = useState("");
   const [minStock, setMinStock] = useState("");
-  const [suppliers, setSuppliers] = useState([
-    { name: "", price: "", leadTime: "" },
-  ]);
+  const [suppliers, setSuppliers] = useState([]);
   const [errors, setErrors] = useState({});
-  const [searchTerm, setSearchTerm] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
-  const { getActiveSuppliers } = useSupplier();
-
-  const handleSupplierSearchChange = (e, index) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    updateSupplier(index, "name", value);
-
-    if (value.length >= 2) {
-      const suggestionResults = getActiveSuppliers().filter((supplier) =>
-        supplier.name.toLowerCase().includes(value.toLowerCase())
-      );
-      setSuggestions(suggestionResults);
-    } else {
-      setSuggestions([]);
-    }
-  };
-
-  const handleSuggestionClick = (supplier, index) => {
-    updateSupplier(index, "name", supplier.name);
-    setSearchTerm("");
-    setSuggestions([]);
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!name.trim()) {
-      newErrors.name = "Name is required";
-    }
-
-    if (!stock || isNaN(stock) || parseInt(stock) < 0) {
-      newErrors.stock = "Initial stock must be a non-negative number";
-    }
-
-    if (!minStock || isNaN(minStock) || parseInt(minStock) < 0) {
-      newErrors.minStock = "Minimum stock must be a non-negative number";
-    }
-
-    suppliers.forEach((supplier, index) => {
-      if (
-        supplier.name &&
-        (!supplier.price ||
-          isNaN(supplier.price) ||
-          parseFloat(supplier.price) <= 0)
-      ) {
-        newErrors[`supplierPrice${index}`] = "Price must be a positive number";
-      }
-      if (
-        supplier.name &&
-        (!supplier.leadTime ||
-          isNaN(supplier.leadTime) ||
-          parseInt(supplier.leadTime) <= 0)
-      ) {
-        newErrors[`supplierLeadTime${index}`] =
-          "Lead time must be a positive number";
-      }
-    });
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  const [showAddSupplierForm, setShowAddSupplierForm] = useState(false);
+  const [selectedSupplier, setSelectedSupplier] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
       const newItem = {
-        id: Date.now(),
         name,
         stock: parseInt(stock),
         onOrder: 0,
         minStock: parseInt(minStock),
-        suppliers: suppliers
-          .filter(
-            (supplier) => supplier.name && supplier.price && supplier.leadTime
-          )
-          .map((supplier, index) => ({
-            id: index + 1,
-            name: supplier.name,
-            price: supplier.price,
-            leadTime: parseInt(supplier.leadTime),
-          })),
+        suppliers,
       };
       onCreateItem(newItem);
     }
   };
 
-  const addSupplier = () => {
-    if (suppliers.length < 1) {
-      setSuppliers([...suppliers, { name: "", price: "", leadTime: "" }]);
-    }
+  const validateForm = () => {
+    const newErrors = {};
+    if (!name.trim()) newErrors.name = "Name is required";
+    if (!stock || isNaN(stock) || parseInt(stock) < 0)
+      newErrors.stock = "Initial stock must be a non-negative number";
+    if (!minStock || isNaN(minStock) || parseInt(minStock) < 0)
+      newErrors.minStock = "Minimum stock must be a non-negative number";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  const updateSupplier = (index, field, value) => {
-    const updatedSuppliers = suppliers.map((supplier, i) => {
-      if (i === index) {
-        return { ...supplier, [field]: value };
-      }
-      return supplier;
-    });
-    setSuppliers(updatedSuppliers);
+  const handleAddSupplier = (newSupplier) => {
+    const formattedSupplier = {
+      name: newSupplier.name,
+      price: parseFloat(newSupplier.price),
+      leadTime: parseInt(newSupplier.leadTime),
+    };
+    setSuppliers([...suppliers, formattedSupplier]);
+    setShowAddSupplierForm(false);
+  };
+
+  const handleSupplierClick = (supplier) => {
+    setSelectedSupplier(supplier);
   };
 
   return (
@@ -158,54 +96,19 @@ function CreateStockItemForm({ onClose, onCreateItem }) {
           <div className={styles.supplierSection}>
             <h3>Suppliers</h3>
             {suppliers.map((supplier, index) => (
-              <div key={index} className={styles.supplierGroup}>
-                <div className={styles.searchInputContainer}>
-                  <input
-                    type="text"
-                    placeholder="Supplier Name"
-                    value={supplier.name}
-                    onChange={(e) => handleSupplierSearchChange(e, index)}
-                  />
-                  {suggestions.length > 0 && (
-                    <ul className={styles.suggestions}>
-                      {suggestions.map((sugg) => (
-                        <li
-                          key={sugg.id}
-                          onClick={() => handleSuggestionClick(sugg, index)}
-                        >
-                          {sugg.name}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-                <input
-                  type="number"
-                  placeholder="Price"
-                  value={supplier.price}
-                  onChange={(e) =>
-                    updateSupplier(index, "price", e.target.value)
-                  }
-                />
-                <input
-                  type="number"
-                  placeholder="Lead Time (days)"
-                  value={supplier.leadTime}
-                  onChange={(e) =>
-                    updateSupplier(index, "leadTime", e.target.value)
-                  }
-                />
+              <div key={index} className={styles.supplierLink}>
+                <span onClick={() => handleSupplierClick(supplier)}>
+                  {supplier.name}
+                </span>
               </div>
             ))}
-            {suppliers.length < 1 && (
-              <button
-                type="button"
-                onClick={addSupplier}
-                className={styles.button}
-              >
-                Add Supplier
-              </button>
-            )}
+            <button
+              type="button"
+              className={styles.button}
+              onClick={() => setShowAddSupplierForm(true)}
+            >
+              Add Supplier
+            </button>
           </div>
           <div className={styles.formActions}>
             <button type="submit" className={styles.button}>
@@ -217,6 +120,18 @@ function CreateStockItemForm({ onClose, onCreateItem }) {
           </div>
         </form>
       </div>
+      {showAddSupplierForm && (
+        <AddSupplierForm
+          onAddSupplier={handleAddSupplier}
+          onClose={() => setShowAddSupplierForm(false)}
+        />
+      )}
+      {selectedSupplier && (
+        <StockItemSupplierDetailsPopup
+          supplier={selectedSupplier}
+          onClose={() => setSelectedSupplier(null)}
+        />
+      )}
     </div>
   );
 }

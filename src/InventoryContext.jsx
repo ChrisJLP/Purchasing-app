@@ -12,6 +12,9 @@ const InventoryContext = createContext();
 
 export function InventoryProvider({ children }) {
   const [inventoryItems, setInventoryItems] = useState(initialInventoryItems);
+  const [lastItemId, setLastItemId] = useState(
+    Math.max(...initialInventoryItems.map((item) => item.id))
+  );
   const [isInitialized, setIsInitialized] = useState(false);
 
   const calculateStockNeeded = useCallback((items) => {
@@ -87,11 +90,14 @@ export function InventoryProvider({ children }) {
   const addNewItem = useCallback(
     (newItem) => {
       setInventoryItems((prevItems) => {
-        const updatedItems = [...prevItems, newItem];
+        const nextId = lastItemId + 1;
+        setLastItemId(nextId);
+        const itemWithId = { ...newItem, id: nextId };
+        const updatedItems = [...prevItems, itemWithId];
         return calculateStockNeeded(updatedItems);
       });
     },
-    [calculateStockNeeded]
+    [calculateStockNeeded, lastItemId]
   );
 
   return (

@@ -53,7 +53,9 @@ function Orders() {
     const supplier = getActiveSuppliers().find((s) => s.name === supplierName);
     const newOrderLines = items.map((item) => {
       const fullItem = inventoryItems.find((invItem) => invItem.id === item.id);
-      const supplierInfo = fullItem.suppliers.find((s) => s.id === supplier.id);
+      const supplierInfo = fullItem.suppliers.find(
+        (s) => s.name === supplier.name
+      );
       const supplierPrice = supplierInfo ? parseFloat(supplierInfo.price) : 0;
       return {
         itemId: item.id,
@@ -288,10 +290,7 @@ function OrderForm({
     const updatedOrderLines = [...orderLines];
     updatedOrderLines[index].itemId = parseInt(value, 10);
 
-    if (
-      selectedSupplier &&
-      selectedSupplier.itemIds.includes(parseInt(value))
-    ) {
+    if (selectedSupplier) {
       const matchedItem = inventoryItems.find(
         (item) => item.id === parseInt(value)
       );
@@ -299,10 +298,10 @@ function OrderForm({
         updatedOrderLines[index].itemName = matchedItem.name;
         updatedOrderLines[index].quantity = "1";
         const itemSupplier = matchedItem.suppliers.find(
-          (supplier) => supplier.id === selectedSupplier.id
+          (supplier) => supplier.name === selectedSupplier.name
         );
         updatedOrderLines[index].basePrice = itemSupplier
-          ? itemSupplier.price
+          ? itemSupplier.price.toString()
           : "";
         updatedOrderLines[index].price = updatedOrderLines[index].basePrice;
       } else {
@@ -320,8 +319,9 @@ function OrderForm({
 
     if (updatedOrderLines[index].itemName !== "") {
       updatedOrderLines[index].quantity = value;
-      updatedOrderLines[index].price =
-        updatedOrderLines[index].basePrice * value;
+      updatedOrderLines[index].price = (
+        parseFloat(updatedOrderLines[index].basePrice) * parseInt(value)
+      ).toFixed(2);
     } else {
       updatedOrderLines[index].quantity = "";
     }
