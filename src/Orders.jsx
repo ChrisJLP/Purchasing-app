@@ -66,6 +66,21 @@ function Orders() {
       };
     });
 
+    const maxLeadTime = Math.max(
+      ...items.map((item) => {
+        const fullItem = inventoryItems.find(
+          (invItem) => invItem.id === item.id
+        );
+        const supplierInfo = fullItem.suppliers.find(
+          (s) => s.name === supplier.name
+        );
+        return supplierInfo ? supplierInfo.leadTime : 0;
+      })
+    );
+
+    const newDeliveryDate = new Date();
+    newDeliveryDate.setDate(newDeliveryDate.getDate() + maxLeadTime);
+
     const hasExistingOrder =
       selectedSupplier ||
       orderLines.some(
@@ -78,15 +93,24 @@ function Orders() {
 
     if (hasExistingOrder) {
       setShowConfirmation(true);
-      setQuickOrderData({ supplier, orderLines: newOrderLines });
+      setQuickOrderData({
+        supplier,
+        orderLines: newOrderLines,
+        deliveryDate: newDeliveryDate.toISOString().split("T")[0],
+      });
     } else {
-      applyQuickOrder({ supplier, orderLines: newOrderLines });
+      applyQuickOrder({
+        supplier,
+        orderLines: newOrderLines,
+        deliveryDate: newDeliveryDate.toISOString().split("T")[0],
+      });
     }
   };
 
   const applyQuickOrder = (data) => {
     setSelectedSupplier(data.supplier);
     setOrderLines(data.orderLines);
+    setDeliveryDate(data.deliveryDate);
     setShowForm(true);
     setShowConfirmation(false);
     setQuickOrderData(null);
@@ -269,6 +293,34 @@ function OrderForm({
     }
   }, [selectedSupplier, orderLines.length, setOrderLines]);
 
+  const calculateDeliveryDate = (lines) => {
+    const maxLeadTime = Math.max(
+      ...lines.map((line) => {
+        const item = inventoryItems.find(
+          (item) => item.id === parseInt(line.itemId)
+        );
+        if (item && selectedSupplier) {
+          const supplierInfo = item.suppliers.find(
+            (s) => s.name === selectedSupplier.name
+          );
+          return supplierInfo ? supplierInfo.leadTime : 0;
+        }
+        return 0;
+      })
+    );
+
+    const date = new Date();
+    date.setDate(date.getDate() + maxLeadTime);
+    return date.toISOString().split("T")[0];
+  };
+
+  useEffect(() => {
+    if (orderLines.length > 0 && selectedSupplier) {
+      const newDeliveryDate = calculateDeliveryDate(orderLines);
+      setDeliveryDate(newDeliveryDate);
+    }
+  }, [orderLines, selectedSupplier]);
+
   const handleDeliveryDateChange = (e) => {
     setDeliveryDate(e.target.value);
   };
@@ -281,34 +333,55 @@ function OrderForm({
   };
 
   const resetOrderLineFields = (orderLine) => {
+    orderLine.itemId = "";
     orderLine.itemName = "";
     orderLine.price = "";
+    orderLine.basePrice = "";
     orderLine.quantity = "";
+  };
+
+  const updateOrderLine = (line, item, supplier) => {
+    if (item && supplier) {
+      const itemSupplier = item.suppliers.find((s) => s.name === supplier.name);
+      if (itemSupplier) {
+        return {
+          ...line,
+          itemName: item.name,
+          quantity: "1",
+          basePrice: itemSupplier.price.toString(),
+          price: itemSupplier.price.toString(),
+        };
+      }
+    }
+    return {
+      ...line,
+      itemName: "",
+      quantity: "",
+      basePrice: "",
+      price: "",
+    };
   };
 
   const handleItemIdChange = (index, value) => {
     const updatedOrderLines = [...orderLines];
-    updatedOrderLines[index].itemId = parseInt(value, 10);
+    const currentLine = updatedOrderLines[index];
 
-    if (selectedSupplier) {
-      const matchedItem = inventoryItems.find(
-        (item) => item.id === parseInt(value)
-      );
-      if (matchedItem) {
-        updatedOrderLines[index].itemName = matchedItem.name;
-        updatedOrderLines[index].quantity = "1";
-        const itemSupplier = matchedItem.suppliers.find(
-          (supplier) => supplier.name === selectedSupplier.name
+    currentLine.itemId = value;
+
+    if (selectedSupplier && value !== "") {
+      const parsedId = parseInt(value, 10);
+      if (!isNaN(parsedId)) {
+        const matchedItem = inventoryItems.find((item) => item.id === parsedId);
+        updatedOrderLines[index] = updateOrderLine(
+          currentLine,
+          matchedItem,
+          selectedSupplier
         );
-        updatedOrderLines[index].basePrice = itemSupplier
-          ? itemSupplier.price.toString()
-          : "";
-        updatedOrderLines[index].price = updatedOrderLines[index].basePrice;
       } else {
-        resetOrderLineFields(updatedOrderLines[index]);
+        updatedOrderLines[index] = updateOrderLine(currentLine, null, null);
       }
     } else {
-      resetOrderLineFields(updatedOrderLines[index]);
+      updatedOrderLines[index] = updateOrderLine(currentLine, null, null);
     }
 
     setOrderLines(updatedOrderLines);
@@ -361,13 +434,28 @@ function OrderForm({
       return "Please add at least one item to the order.";
     }
     for (const line of orderLines) {
-      if (!line.itemId || !line.quantity || parseInt(line.quantity) <= 0) {
-        return "Please ensure all order lines have a valid item ID and quantity.";
+      if (
+        !line.itemId ||
+        !line.quantity ||
+        parseInt(line.quantity) <= 0 ||
+        !line.price
+      ) {
+        return "Please ensure all order lines have a valid item ID, quantity, and price.";
+      }
+      const item = inventoryItems.find(
+        (item) => item.id === parseInt(line.itemId)
+      );
+      if (
+        !item ||
+        !item.suppliers.some(
+          (supplier) => supplier.name === selectedSupplier.name
+        )
+      ) {
+        return "One or more items are not available from the selected supplier.";
       }
     }
     return "";
   };
-
   const handlePlaceOrder = (e) => {
     e.preventDefault();
     const error = validateOrder();
