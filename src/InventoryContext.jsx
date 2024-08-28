@@ -84,6 +84,16 @@ export function InventoryProvider({ children }) {
       }));
   }, [inventoryItems]);
 
+  const addNewItem = useCallback(
+    (newItem) => {
+      setInventoryItems((prevItems) => {
+        const updatedItems = [...prevItems, newItem];
+        return calculateStockNeeded(updatedItems);
+      });
+    },
+    [calculateStockNeeded]
+  );
+
   return (
     <InventoryContext.Provider
       value={{
@@ -94,6 +104,7 @@ export function InventoryProvider({ children }) {
         updateStockLevel,
         stockNeededItems,
         isInitialized,
+        addNewItem,
       }}
     >
       {children}

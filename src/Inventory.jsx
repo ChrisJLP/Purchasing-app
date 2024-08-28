@@ -6,13 +6,16 @@ import StockNeeded from "./StockNeeded";
 import StockItemPopup from "./StockItemPopup";
 import CurrentOrdersPopup from "./CurrentOrdersPopup";
 import OrderDetailsPopup from "./OrderDetailsPopup";
+import CreateStockItemForm from "./CreateStockItemForm";
 
 function Inventory() {
-  const { inventoryItems, stockNeededItems, isInitialized } = useInventory();
+  const { inventoryItems, stockNeededItems, isInitialized, addNewItem } =
+    useInventory();
   const { currentOrders } = useOrder();
   const [selectedItem, setSelectedItem] = useState(null);
   const [showCurrentOrders, setShowCurrentOrders] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
   if (!isInitialized) {
     return <div>Loading...</div>;
@@ -44,6 +47,11 @@ function Inventory() {
     setShowCurrentOrders(true);
   };
 
+  const handleCreateItem = (newItem) => {
+    addNewItem(newItem);
+    setShowCreateForm(false);
+  };
+
   const itemOrders = currentOrders.filter((order) =>
     order.lines.some((line) => parseInt(line.itemId, 10) === selectedItem?.id)
   );
@@ -60,6 +68,18 @@ function Inventory() {
         isClickable={false}
         showOrderButton={true}
       />
+      <button
+        className={`${styles.button} ${styles.createStockItemButton}`}
+        onClick={() => setShowCreateForm(true)}
+      >
+        Create a stock item
+      </button>
+      {showCreateForm && (
+        <CreateStockItemForm
+          onClose={() => setShowCreateForm(false)}
+          onCreateItem={handleCreateItem}
+        />
+      )}
       {selectedItem && (
         <StockItemPopup
           item={selectedItem}
