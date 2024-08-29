@@ -58,17 +58,17 @@ function StockNeeded({
         </p>
       ) : isOrdersPage ? (
         Object.entries(groupedItems).map(([supplierName, items]) => (
-          <div key={supplierName}>
+          <div key={supplierName} className={styles.stockNeededSupplier}>
             <h3>{supplierName}</h3>
             <ul className={styles.list}>
               {items.map((item) => (
                 <li key={item.id} className={styles.stockItem}>
-                  <button
+                  <p
                     onClick={() => handleItemClick(item)}
                     className={styles.stockItemButton}
                   >
                     {item.quantity}x {item.name}
-                  </button>
+                  </p>
                 </li>
               ))}
             </ul>

@@ -87,20 +87,43 @@ function QuickLinks() {
       <h2>Quick Links</h2>
       <ul className={styles.quickLinksList}>
         <li className={styles.quickLink}>
-          <Link to="/orders" state={{ openOrderForm: true }}>
+          {/* Added className to Link component */}
+          <Link
+            to="/orders"
+            state={{ openOrderForm: true }}
+            className={styles.quickLinkAnchor}
+          >
             Create Order
           </Link>
         </li>
         <li className={styles.quickLink}>
-          <Link to="/suppliers" state={{ focusSearch: true }}>
+          {/* Added className to Link component */}
+          <Link
+            to="/suppliers"
+            state={{ focusSearch: true }}
+            className={styles.quickLinkAnchor}
+          >
             Search Supplier
           </Link>
         </li>
-        <li className={styles.quickLink} onClick={handleCreateItem}>
-          Create Item
+        {/* Changed to anchor tags for consistency */}
+        <li className={styles.quickLink}>
+          <a
+            href="#"
+            onClick={handleCreateItem}
+            className={styles.quickLinkAnchor}
+          >
+            Create Item
+          </a>
         </li>
-        <li className={styles.quickLink} onClick={handleCreateSupplier}>
-          Create Supplier
+        <li className={styles.quickLink}>
+          <a
+            href="#"
+            onClick={handleCreateSupplier}
+            className={styles.quickLinkAnchor}
+          >
+            Create Supplier
+          </a>
         </li>
       </ul>
     </div>

@@ -523,7 +523,7 @@ function OrderForm({
             <thead>
               <tr>
                 <th>Item ID</th>
-                <th>Item</th>
+                <th>Description</th>
                 <th>Qty</th>
                 <th>Price</th>
               </tr>
@@ -569,7 +569,10 @@ function OrderForm({
                     />
                   </td>
                   <td>
-                    <button onClick={(e) => handleRemoveLine(index, e)}>
+                    <button
+                      onClick={(e) => handleRemoveLine(index, e)}
+                      className={styles.removeButton}
+                    >
                       Remove
                     </button>
                   </td>
@@ -577,7 +580,11 @@ function OrderForm({
               ))}
             </tbody>
           </table>
-          <button type="button" onClick={handleAddLine}>
+          <button
+            type="button"
+            onClick={handleAddLine}
+            className={styles.newLineButton}
+          >
             Add New Line
           </button>
           <div className={styles.formGroup}>
@@ -597,20 +604,22 @@ function OrderForm({
             <button type="submit" className={styles.placeOrderButton}>
               Place Order
             </button>
-            <button
-              type="button"
-              className={styles.resetOrderButton}
-              onClick={onResetOrder}
-            >
-              Reset Order
-            </button>
-            <button
-              type="button"
-              className={styles.closeFormButton}
-              onClick={handleCloseClick}
-            >
-              Close
-            </button>
+            <div className={styles.lowerButtonsContainer}>
+              <button
+                type="button"
+                className={styles.resetOrderButton}
+                onClick={onResetOrder}
+              >
+                Reset Order
+              </button>
+              <button
+                type="button"
+                className={styles.closeFormButton}
+                onClick={handleCloseClick}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </fieldset>
       </form>

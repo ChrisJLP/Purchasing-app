@@ -2,25 +2,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #f0f2f5;
+    background-color: #fffffe;
     height: 93vh;
     margin: 0;
     padding: 0;
-}
-
-.stockNeededContainer {
-    display: flex;
-    flex-direction: column;
-    width: 80vw;
-    align-items: center;
-    justify-content: center;
-    height: 30vh;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: #e3f2fd;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 5%;
-    margin-top: 15%;
 }
 
 .currentOrdersContainer {
@@ -32,7 +17,7 @@
     height: 20vh;
     border: 1px solid #ddd;
     border-radius: 10px;
-    background-color: #e3f2fd;
+    background-color: #f8f5f2;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 5%;
     margin-top: 10%;
@@ -69,21 +54,8 @@ span {
     width: 55%;
 }
 
-.button {
-    background-color: #0056b3;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 60px;
-    height: 30px;
-    font-size: 16px;
-}
-
 .newOrderButton {
-    background-color: #0056b3;
+    background-color: #f45d48;
     color: white;
     border: none;
     padding: 8px 16px;
@@ -99,14 +71,13 @@ span {
 
 /* CSS for Form */
 
-
 .formContainer {
     position: absolute;
     width: 80vw;
     height: 60vh;
     border: 1px solid #ddd;
     border-radius: 10px;
-    background-color: #e3f2fd;
+    background-color: #f8f5f2;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 5%;
     margin-top: 60%;
@@ -168,6 +139,7 @@ span {
 .orderLine {
     display: flex;
     gap: 2px;
+    margin-bottom: 3px;
 }
 
 .formContainer td {
@@ -178,6 +150,7 @@ span {
 .formContainer tbody {
     display: flex;
     flex-wrap: wrap;
+    margin-bottom: 10px;
 }
 
 .orderTable tr {
@@ -214,7 +187,7 @@ span {
 }
 
 .placeOrderButton {
-    background-color: #0056b3;
+    background-color: #f45d48;
     color: white;
     border: none;
     padding: 4px 8px;
@@ -224,8 +197,12 @@ span {
     transition: background-color 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     height: 40px;
-    width: 120px;
+    margin: 5px;
 }
+  
+  .resetOrderButton:hover {
+    background-color: #f45d48;
+  }
 
 .closeFormButtonContainer {
     display: flex;
@@ -234,8 +211,8 @@ span {
     margin-bottom: 10px;
 }
 
-.closeFormButton {
-    background-color: #0056b3;
+.closeFormButton, .resetOrderButton {
+    background-color: #f45d48;
     color: white;
     border: none;
     padding: 2px 4px;
@@ -244,8 +221,35 @@ span {
     cursor: pointer;
     transition: background-color 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    height: 25px;
-    width: 80px;
+    height: 35px;
+    margin: 0 5px;
+}
+
+.removeButton {
+    background-color: #f45d48;
+    color: white;
+    height: 24px;
+    width: 60px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.newLineButton {
+    background-color: #f45d48;
+    color: white;
+    height: 30px;
+    width: 100px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+    margin-bottom: 10px;
 }
 
 .errorPopup {
@@ -339,26 +343,16 @@ span {
     color: white;
   }
 
-  .resetOrderButton {
-    background-color: #f44336;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 4px;
-  }
-  
-  .resetOrderButton:hover {
-    background-color: #d32f2f;
-  }
-  
   .formActions {
+    position: fixed;
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
+    margin-top: 85%;
+  }
+
+  .lowerButtonsContainer {
+    display: flex;
+    gap: 10px;
     margin-top: 20px;
   }
