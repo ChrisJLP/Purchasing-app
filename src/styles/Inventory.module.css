@@ -14,7 +14,7 @@
     width: 80vw;
     align-items: center;
     justify-content: center;
-    height: auto;
+    height: 50%;
     border: 1px solid #ddd;
     border-radius: 10px;
     background-color: #f8f5f2;
@@ -90,3 +90,31 @@
 .createStockItemButton:hover {
     text-decoration: underline;
 }
+
+.tableHeader {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    padding: 10px;
+    background-color: #f8f5f2;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  
+  .tableBody {
+    height: 400px;
+    overflow-y: auto;
+  }
+  
+  .tableRow {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+    align-items: center;
+  }
+  
+  .tableRow:nth-child(even) {
+    background-color: #f9f9f9;
+  }

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import styles from "./styles/Dashboard.module.css";
 import StockItemDetails from "./StockItemDetails";
 
-function StockNeeded({
+const StockNeeded = React.memo(function StockNeeded({
   stockNeededItems = [],
   inventoryItems,
   isClickable = false,
@@ -32,7 +32,7 @@ function StockNeeded({
     const grouped = {};
     stockNeededItems.forEach((item) => {
       const fullItem = inventoryItems.find((invItem) => invItem.id === item.id);
-      if (fullItem) {
+      if (fullItem && fullItem.suppliers && fullItem.suppliers.length > 0) {
         const cheapestSupplier = fullItem.suppliers.reduce((min, supplier) =>
           parseFloat(supplier.price) < parseFloat(min.price) ? supplier : min
         );
@@ -44,6 +44,12 @@ function StockNeeded({
           ...item,
           supplierId: cheapestSupplier.id,
         });
+      } else {
+        // Handle items without suppliers or with an empty suppliers array
+        if (!grouped["No Supplier"]) {
+          grouped["No Supplier"] = [];
+        }
+        grouped["No Supplier"].push({ ...item, supplierId: null });
       }
     });
     return grouped;
@@ -112,6 +118,6 @@ function StockNeeded({
       )}
     </div>
   );
-}
+});
 
 export default StockNeeded;

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { FixedSizeList as List } from "react-window";
 import styles from "./styles/Inventory.module.css";
 import { useInventory } from "./InventoryContext";
 import { useOrder } from "./OrderContext";
@@ -130,76 +131,73 @@ function CurrentStock({ inventoryItems, onItemClick }) {
     setEditIndex(null);
   };
 
+  const Row = ({ index, style }) => {
+    const item = inventoryItems[index];
+    return (
+      <div style={style} className={styles.tableRow}>
+        <button
+          className={styles.itemNameButton}
+          onClick={() => onItemClick(item)}
+        >
+          {item.name}
+        </button>
+        <span>
+          {editIndex === index ? (
+            <input
+              type="number"
+              value={editedStock}
+              className={styles.inventoryNumInput}
+              onChange={(e) => setEditedStock(e.target.value)}
+            />
+          ) : (
+            item.stock
+          )}
+        </span>
+        <span>{item.onOrder}</span>
+        <span>
+          {editIndex === index ? (
+            <input
+              type="number"
+              value={editedMinStock}
+              className={styles.inventoryNumInput}
+              onChange={(e) => setEditedMinStock(e.target.value)}
+            />
+          ) : (
+            item.minStock
+          )}
+        </span>
+        <button
+          className={
+            editIndex === index ? styles.saveButton : styles.editButton
+          }
+          onClick={() =>
+            editIndex === index ? handleSave(index) : handleEdit(index)
+          }
+        >
+          {editIndex === index ? "Save" : "Edit"}
+        </button>
+      </div>
+    );
+  };
+
   return (
     <div className={styles.currentStockContainer}>
       <h2>Current Stock</h2>
-      <table className={styles.inventoryTable}>
-        <thead>
-          <tr className={styles.inventoryTr}>
-            <th className={styles.inventoryTh}>Item</th>
-            <th>Stock</th>
-            <th>On Order</th>
-            <th>Min Stock</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {inventoryItems.map((item, index) => (
-            <tr key={index} className={styles.tableRow}>
-              <td>
-                <button
-                  className={styles.itemNameButton}
-                  onClick={() => onItemClick(item)}
-                >
-                  {item.name}
-                </button>
-              </td>
-              <td>
-                {editIndex === index ? (
-                  <input
-                    type="number"
-                    value={editedStock}
-                    className={styles.inventoryNumInput}
-                    onChange={(e) => setEditedStock(e.target.value)}
-                  />
-                ) : (
-                  item.stock
-                )}
-              </td>
-              <td>{item.onOrder}</td>
-              <td>
-                {editIndex === index ? (
-                  <input
-                    type="number"
-                    value={editedMinStock}
-                    className={styles.inventoryNumInput}
-                    onChange={(e) => setEditedMinStock(e.target.value)}
-                  />
-                ) : (
-                  item.minStock
-                )}
-              </td>
-              <td>
-                {editIndex === index ? (
-                  <button
-                    className={styles.saveButton}
-                    onClick={() => handleSave(index)}
-                  >
-                    Save
-                  </button>
-                ) : (
-                  <button
-                    className={styles.editButton}
-                    onClick={() => handleEdit(index)}
-                  >
-                    Edit
-                  </button>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className={styles.tableHeader}>
+        <span>Item</span>
+        <span>Stock</span>
+        <span>On Order</span>
+        <span>Min Stock</span>
+        <span>Actions</span>
+      </div>
+      <List
+        height={400}
+        itemCount={inventoryItems.length}
+        itemSize={35}
+        width="100%"
+      >
+        {Row}
+      </List>
     </div>
   );
 }

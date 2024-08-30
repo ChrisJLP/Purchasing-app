@@ -58,61 +58,64 @@ export function InventoryProvider({ children }) {
     [calculateStockNeeded]
   );
 
-  const recalculateStockNeeded = useCallback(() => {
-    setInventoryItems((prevItems) => calculateStockNeeded(prevItems));
-  }, [calculateStockNeeded]);
-
-  const updateStockLevel = useCallback(
-    (index, newStock, newMinStock) => {
-      setInventoryItems((prevItems) => {
-        const updatedItems = [...prevItems];
-        updatedItems[index] = {
-          ...updatedItems[index],
-          stock: parseInt(newStock),
-          minStock: parseInt(newMinStock),
-        };
-        return calculateStockNeeded(updatedItems);
+  const addNewItem = useCallback(
+    (newItem) => {
+      setLastItemId((prevId) => {
+        const nextId = prevId + 1;
+        setInventoryItems((prevItems) => {
+          const itemWithId = { ...newItem, id: nextId, onOrder: 0 };
+          const updatedItems = [...prevItems, itemWithId];
+          return calculateStockNeeded(updatedItems);
+        });
+        return nextId;
       });
     },
     [calculateStockNeeded]
   );
 
-  const stockNeededItems = useMemo(() => {
-    return inventoryItems
-      .filter((item) => item.stockNeeded > 0)
-      .map((item) => ({
-        id: item.id,
-        name: item.name,
-        quantity: item.stockNeeded,
-      }));
-  }, [inventoryItems]);
-
-  const addNewItem = useCallback(
-    (newItem) => {
-      setInventoryItems((prevItems) => {
-        const nextId = lastItemId + 1;
-        setLastItemId(nextId);
-        const itemWithId = { ...newItem, id: nextId };
-        const updatedItems = [...prevItems, itemWithId];
-        return calculateStockNeeded(updatedItems);
-      });
-    },
-    [calculateStockNeeded, lastItemId]
+  const contextValue = useMemo(
+    () => ({
+      inventoryItems,
+      setInventoryItems,
+      updateStockNeeded,
+      recalculateStockNeeded: useCallback(() => {
+        setInventoryItems((prevItems) => calculateStockNeeded(prevItems));
+      }, [calculateStockNeeded]),
+      updateStockLevel: useCallback(
+        (index, newStock, newMinStock) => {
+          setInventoryItems((prevItems) => {
+            const updatedItems = [...prevItems];
+            updatedItems[index] = {
+              ...updatedItems[index],
+              stock: parseInt(newStock),
+              minStock: parseInt(newMinStock),
+            };
+            return calculateStockNeeded(updatedItems);
+          });
+        },
+        [calculateStockNeeded]
+      ),
+      stockNeededItems: inventoryItems
+        .filter((item) => item.stockNeeded > 0)
+        .map((item) => ({
+          id: item.id,
+          name: item.name,
+          quantity: item.stockNeeded,
+        })),
+      isInitialized,
+      addNewItem,
+    }),
+    [
+      inventoryItems,
+      isInitialized,
+      calculateStockNeeded,
+      updateStockNeeded,
+      addNewItem,
+    ]
   );
 
   return (
-    <InventoryContext.Provider
-      value={{
-        inventoryItems,
-        setInventoryItems,
-        updateStockNeeded,
-        recalculateStockNeeded,
-        updateStockLevel,
-        stockNeededItems,
-        isInitialized,
-        addNewItem,
-      }}
-    >
+    <InventoryContext.Provider value={contextValue}>
       {children}
     </InventoryContext.Provider>
   );

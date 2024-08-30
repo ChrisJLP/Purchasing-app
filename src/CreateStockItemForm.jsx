@@ -21,7 +21,7 @@ function CreateStockItemForm({ onClose, onCreateItem }) {
         stock: parseInt(stock),
         onOrder: 0,
         minStock: parseInt(minStock),
-        suppliers,
+        suppliers: suppliers.length > 0 ? suppliers : [], // Ensure suppliers is always an array
       };
       onCreateItem(newItem);
     }
