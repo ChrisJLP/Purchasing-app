@@ -3,10 +3,11 @@
     flex-direction: column;
     align-items: center;
     background-color: #fffffe;
-    height: 93vh;
+    min-height: 93vh;
     margin: 0;
     padding: 0;
-}
+    position: relative; 
+  }
 
 .currentOrdersContainer {
     display: flex;
@@ -72,16 +73,22 @@ span {
 /* CSS for Form */
 
 .formContainer {
-    position: absolute;
-    width: 80vw;
-    height: 60vh;
+    position: absolute; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    width: 80%;
+    max-width: 500px;
     border: 1px solid #ddd;
     border-radius: 10px;
     background-color: #f8f5f2;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 5%;
-    margin-top: 60%;
-}
+    overflow-y: auto; 
+    display: flex;
+    flex-direction: column;
+    top: 30%; 
+    bottom: 20px; 
+  }
+
 
 .formContainer fieldset {
     border: none;
@@ -89,7 +96,20 @@ span {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    height: 100%;
+    height: 100%; 
+    padding: 0;
+    margin: 0;
+    overflow-y: auto; 
+}
+
+.formActions {
+    display: flex; 
+    flex-direction: column; 
+    justify-content: flex-end; 
+    align-items: center; 
+    margin-top: auto; 
+    padding: 10px 0;
+    width: 100%;
 }
 
 .formContainer legend {
@@ -196,9 +216,10 @@ span {
     cursor: pointer;
     transition: background-color 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    height: 40px;
-    margin: 5px;
-}
+    width: 60%;
+    margin-bottom: 10px; 
+    padding: 10px;
+  }
   
   .resetOrderButton:hover {
     background-color: #f45d48;
@@ -343,16 +364,9 @@ span {
     color: white;
   }
 
-  .formActions {
-    position: fixed;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin-top: 85%;
-  }
-
   .lowerButtonsContainer {
     display: flex;
     gap: 10px;
-    margin-top: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
