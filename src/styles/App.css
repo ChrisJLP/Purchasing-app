@@ -12,6 +12,7 @@ html, body {
   color-scheme: light dark;
   background-color: #ffffff;
   color: #213547;
+  touch-action: manipulation;
 }
 
 #root {
