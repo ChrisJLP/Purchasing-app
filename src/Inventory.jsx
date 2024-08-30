@@ -194,7 +194,54 @@ function CurrentStock({ inventoryItems, onItemClick }) {
         itemSize={35}
         width="100%"
       >
-        {Row}
+        {({ index, style }) => {
+          const item = inventoryItems[index];
+          return (
+            <div style={style} className={styles.tableRow}>
+              <button
+                className={styles.itemNameButton}
+                onClick={() => onItemClick(item)}
+              >
+                {item.name}
+              </button>
+              <span>
+                {editIndex === index ? (
+                  <input
+                    type="number"
+                    value={editedStock}
+                    className={styles.inventoryNumInput}
+                    onChange={(e) => setEditedStock(e.target.value)}
+                  />
+                ) : (
+                  item.stock
+                )}
+              </span>
+              <span>{item.onOrder}</span>
+              <span>
+                {editIndex === index ? (
+                  <input
+                    type="number"
+                    value={editedMinStock}
+                    className={styles.inventoryNumInput}
+                    onChange={(e) => setEditedMinStock(e.target.value)}
+                  />
+                ) : (
+                  item.minStock
+                )}
+              </span>
+              <button
+                className={
+                  editIndex === index ? styles.saveButton : styles.editButton
+                }
+                onClick={() =>
+                  editIndex === index ? handleSave(index) : handleEdit(index)
+                }
+              >
+                {editIndex === index ? "Save" : "Edit"}
+              </button>
+            </div>
+          );
+        }}
       </List>
     </div>
   );
