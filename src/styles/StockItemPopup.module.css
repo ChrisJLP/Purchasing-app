@@ -12,7 +12,7 @@
   }
   
   .popupContent {
-    background-color: #e3f2fd;
+    background-color: #f8f5f2;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -21,7 +21,7 @@
   }
   
   .closeButton {
-    background-color: #0056b3;
+    background-color: #f45d48;
     color: white;
     border: none;
     padding: 8px 16px;
@@ -33,7 +33,7 @@
   }
   
   .closeButton:hover {
-    background-color: #003d82;
+    background-color: #f45d48;
   }
 
   .supplierTable {
@@ -54,7 +54,7 @@
   }
   
   .viewOrdersButton {
-    background-color: #4CAF50;
+    background-color: #f45d48;
     color: white;
     border: none;
     padding: 8px 16px;
@@ -66,5 +66,5 @@
   }
   
   .viewOrdersButton:hover {
-    background-color: #45a049;
+    background-color: #f45d48;
   }

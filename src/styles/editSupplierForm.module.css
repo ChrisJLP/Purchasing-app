@@ -12,7 +12,7 @@
   }
   
   .formContainer {
-    background-color: #e3f2fd;
+    background-color: #f8f5f2;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -55,14 +55,14 @@
   }
   
   .saveButton {
-    background-color: #0056b3;
+    background-color: #f45d48;
     color: white;
     margin-right: 10px;
   }
   
   .cancelButton {
-    background-color: #f0f2f5;
-    color: #333;
+    background-color: #f45d48;
+    color: white;
   }
   
   .saveButton:hover, .cancelButton:hover {
@@ -70,7 +70,7 @@
   }
 
   .deleteButton {
-    background-color: #dc3545;
+    background-color: #f45d48;
     color: white;
     padding: 8px 16px;
     border: none;
@@ -81,7 +81,7 @@
   }
   
   .deleteButton:hover {
-    background-color: #c82333;
+    background-color: #f45d48;
   }
   
   .confirmationOverlay {
@@ -113,7 +113,7 @@
   }
   
   .confirmDeleteButton {
-    background-color: #dc3545;
+    background-color: #f45d48;
     color: white;
     padding: 8px 16px;
     border: none;
@@ -125,7 +125,7 @@
   }
   
   .confirmDeleteButton:hover {
-    background-color: #c82333;
+    background-color: #f45d48;
   }
 
   .errorMessage {

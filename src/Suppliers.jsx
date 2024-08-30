@@ -241,7 +241,7 @@ const SearchSuppliers = React.forwardRef(({ onSupplierClick }, ref) => {
             </ul>
           )}
         </div>
-        <input type="submit" value="Search" />
+        <input type="submit" value="Search" className={styles.searchButton} />
       </form>
       {searchResults.length > 0 && (
         <ul className={styles.searchResults}>

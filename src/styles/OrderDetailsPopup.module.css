@@ -11,7 +11,7 @@
     height: 40vh;
     border: 1px solid #ddd;
     border-radius: 10px;
-    background-color: #e3f2fd;
+    background-color: #f8f5f2;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     padding-top: 30px;
@@ -28,7 +28,7 @@
   }
   
   .closeButton {
-    background-color: #0056b3;
+    background-color: #f45d48;
     color: white;
     border: none;
     padding: 2px 4px;
