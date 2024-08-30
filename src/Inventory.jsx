@@ -184,11 +184,9 @@ function CurrentStock({ inventoryItems, onItemClick }) {
     <div className={styles.currentStockContainer}>
       <h2>Current Stock</h2>
       <div className={styles.tableHeader}>
-        <span>Item</span>
         <span>Stock</span>
-        <span>On Order</span>
-        <span>Min Stock</span>
-        <span>Actions</span>
+        <span>Order</span>
+        <span>Min</span>
       </div>
       <List
         height={400}

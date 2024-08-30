@@ -24,6 +24,7 @@
     padding-left: 20px;
     padding-bottom: 10px;
     padding-top: 5px;
+    overflow-x: auto;
 }
 
 .editButton, .saveButton {
@@ -100,6 +101,9 @@
     position: sticky;
     top: 0;
     z-index: 1;
+    gap: 14px;
+    margin-left: 21%;
+    height: 7%;
   }
   
   .tableBody {
@@ -113,6 +117,7 @@
     padding: 10px;
     border-bottom: 1px solid #e0e0e0;
     align-items: center;
+    gap: 5px;
   }
   
   .tableRow:nth-child(even) {
