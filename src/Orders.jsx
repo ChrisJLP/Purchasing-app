@@ -214,7 +214,7 @@ function Orders() {
 }
 
 function CurrentOrders({ orders, onOrderClick }) {
-  if (!orders || !Array.isArray(orders) || orders.length == 0) {
+  if (!orders || !Array.isArray(orders) || orders.length === 0) {
     return (
       <div className={styles.currentOrdersContainer}>
         <h2>Current Orders</h2>
@@ -223,44 +223,23 @@ function CurrentOrders({ orders, onOrderClick }) {
     );
   }
 
-  const groupedOrders = orders.reduce((acc, order) => {
-    if (!acc[order.deliveryDate]) {
-      acc[order.deliveryDate] = [];
-    }
-    acc[order.deliveryDate].push(order);
-    return acc;
-  }, {});
-
   return (
-    <>
-      <div className={styles.currentOrdersContainer}>
-        <h2>Current Orders</h2>
-        <ul className={styles.currentOrdersList}>
-          {Object.entries(groupedOrders).map(([date, dateOrders]) =>
-            dateOrders.map((order, index) => (
-              <li
-                key={`${date}-${index}`}
-                className={styles.orderItem}
-                onClick={() => onOrderClick(order)}
-              >
-                <span className={styles.orderNumber}>
-                  Order Number: {order.orderNumber}
-                </span>
-                {order.lines.map((line, lineIndex) => (
-                  <span
-                    key={`${line.itemId}-${lineIndex}`}
-                    className={styles.orderLine}
-                  >
-                    {line.quantity}x {line.itemName} - Due{" "}
-                    {new Date(date).toLocaleDateString("en-GB")}
-                  </span>
-                ))}
-              </li>
-            ))
-          )}
-        </ul>
-      </div>
-    </>
+    <div className={styles.currentOrdersContainer}>
+      <h2>Current Orders</h2>
+      <ul className={styles.currentOrdersList}>
+        {orders.map((order, index) => (
+          <li
+            key={`${order.orderNumber}-${index}`}
+            className={styles.orderItem}
+            onClick={() => onOrderClick(order)}
+          >
+            <span className={styles.orderLink}>
+              Purchase Order: {order.orderNumber}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 

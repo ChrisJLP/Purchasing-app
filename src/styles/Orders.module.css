@@ -370,3 +370,7 @@ span {
     margin-top: 10px;
     margin-bottom: 10px;
   }
+
+  .orderLink {
+    color: #0056b3;
+  }
